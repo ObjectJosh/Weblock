@@ -17,64 +17,64 @@
    <widget class="QWidget" name="gridLayoutWidget">
     <property name="geometry">
      <rect>
-      <x>120</x>
-      <y>100</y>
+      <x>130</x>
+      <y>120</y>
       <width>531</width>
       <height>124</height>
      </rect>
     </property>
-    <layout class="QGridLayout" name="gridLayout">
+    <layout class="QGridLayout" name="sitesGridLayout">
      <item row="1" column="0">
-      <widget class="QLabel" name="label">
+      <widget class="QLabel" name="blockedSitesLabel">
        <property name="text">
         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:18pt;&quot;&gt;Blocked Sites&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
        </property>
       </widget>
      </item>
      <item row="1" column="1">
-      <widget class="QLabel" name="label_2">
+      <widget class="QLabel" name="blockedLabel">
        <property name="text">
         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:18pt;&quot;&gt;Blocked&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
        </property>
       </widget>
      </item>
      <item row="3" column="2" alignment="Qt::AlignHCenter">
-      <widget class="QPushButton" name="pushButton_3">
+      <widget class="QPushButton" name="deleteButton2">
        <property name="text">
         <string>Delete</string>
        </property>
       </widget>
      </item>
      <item row="2" column="2" alignment="Qt::AlignHCenter">
-      <widget class="QPushButton" name="pushButton_2">
+      <widget class="QPushButton" name="deleteButton1">
        <property name="text">
         <string>Delete</string>
        </property>
       </widget>
      </item>
      <item row="1" column="2" alignment="Qt::AlignHCenter">
-      <widget class="QPushButton" name="pushButton">
+      <widget class="QPushButton" name="addNewButton">
        <property name="text">
         <string>Add New</string>
        </property>
       </widget>
      </item>
      <item row="2" column="1" alignment="Qt::AlignHCenter">
-      <widget class="QCheckBox" name="checkBox">
+      <widget class="QCheckBox" name="checkBox1">
        <property name="text">
         <string/>
        </property>
       </widget>
      </item>
      <item row="3" column="1" alignment="Qt::AlignHCenter">
-      <widget class="QCheckBox" name="checkBox_2">
+      <widget class="QCheckBox" name="checkBox2">
        <property name="text">
         <string/>
        </property>
       </widget>
      </item>
      <item row="2" column="0">
-      <widget class="QTextEdit" name="textEdit">
+      <widget class="QTextEdit" name="site1">
        <property name="maximumSize">
         <size>
          <width>16777215</width>
@@ -84,7 +84,7 @@
       </widget>
      </item>
      <item row="3" column="0">
-      <widget class="QTextEdit" name="textEdit_2">
+      <widget class="QTextEdit" name="site2">
        <property name="maximumSize">
         <size>
          <width>16777215</width>
@@ -95,11 +95,11 @@
      </item>
     </layout>
    </widget>
-   <widget class="QLabel" name="label_3">
+   <widget class="QLabel" name="setDurationLabel">
     <property name="geometry">
      <rect>
-      <x>330</x>
-      <y>350</y>
+      <x>310</x>
+      <y>279</y>
       <width>141</width>
       <height>31</height>
      </rect>
@@ -111,29 +111,29 @@
    <widget class="QWidget" name="gridLayoutWidget_2">
     <property name="geometry">
      <rect>
-      <x>270</x>
-      <y>380</y>
+      <x>250</x>
+      <y>309</y>
       <width>266</width>
-      <height>61</height>
+      <height>63</height>
      </rect>
     </property>
-    <layout class="QGridLayout" name="gridLayout_2">
+    <layout class="QGridLayout" name="durationGridLayout">
      <item row="0" column="1" alignment="Qt::AlignHCenter">
-      <widget class="QLabel" name="label_5">
+      <widget class="QLabel" name="minutesLabel">
        <property name="text">
         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-size:18pt;&quot;&gt;Minutes&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
        </property>
       </widget>
      </item>
      <item row="0" column="0" alignment="Qt::AlignHCenter">
-      <widget class="QLabel" name="label_4">
+      <widget class="QLabel" name="hoursLabel">
        <property name="text">
         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-size:18pt;&quot;&gt;Hours&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
        </property>
       </widget>
      </item>
      <item row="1" column="0">
-      <widget class="QTextEdit" name="textEdit_3">
+      <widget class="QTextEdit" name="hoursField">
        <property name="maximumSize">
         <size>
          <width>16777215</width>
@@ -150,7 +150,7 @@ p, li { white-space: pre-wrap; }
       </widget>
      </item>
      <item row="1" column="1">
-      <widget class="QTextEdit" name="textEdit_5">
+      <widget class="QTextEdit" name="minutesField">
        <property name="maximumSize">
         <size>
          <width>16777215</width>
@@ -168,17 +168,30 @@ p, li { white-space: pre-wrap; }
      </item>
     </layout>
    </widget>
-   <widget class="QLabel" name="label_6">
+   <widget class="QLabel" name="titleLabel">
     <property name="geometry">
      <rect>
-      <x>300</x>
-      <y>30</y>
+      <x>270</x>
+      <y>40</y>
       <width>231</width>
       <height>51</height>
      </rect>
     </property>
     <property name="text">
      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-size:36pt;&quot;&gt;Web Blocker&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="saveButton">
+    <property name="geometry">
+     <rect>
+      <x>320</x>
+      <y>410</y>
+      <width>111</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Save</string>
     </property>
    </widget>
   </widget>
