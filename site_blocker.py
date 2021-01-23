@@ -119,6 +119,22 @@ class Ui_MainWindow(object):
         self.titleLabel.setText(_translate("MainWindow", "<html><head/><body><p align=\"center\"><span style=\" font-size:36pt;\">Web Blocker</span></p></body></html>"))
         self.saveButton.setText(_translate("MainWindow", "Save"))
 
+    def connectActions(self, MainWindow):
+        self.saveButton.clicked.connect(self.clicked)
+        #self.addNewButton.clicked.connect(self.clicked)
+        self.addNewButton.clicked.connect(self.newRow)
+
+
+    def clicked(self):
+        print("button was clicked")
+
+    def newRow(self):
+        print("adding new row...")
+        # Add functionality for adding a new row here!
+        #
+        #
+
+
 
 if __name__ == "__main__":
     import sys
@@ -126,5 +142,6 @@ if __name__ == "__main__":
     MainWindow = QtWidgets.QMainWindow()
     ui = Ui_MainWindow()
     ui.setupUi(MainWindow)
+    ui.connectActions(MainWindow)
     MainWindow.show()
     sys.exit(app.exec_())
