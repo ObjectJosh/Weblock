@@ -2,11 +2,21 @@
 import time
 from datetime import datetime as dt
 
-
 # websiteList -> list
 # earlyTime -> int
 # lateTime -> int
 # hostsPath -> string (taken from bash file so that we can use it for both Mac and Windows OS)
+
+def close_blocker(nowTime, endTime):
+    if nowTime >= endTime:
+        with open(hostsPath, 'r+') as file:
+            content = file.readlines()
+            file.seek(0)
+            for line in content:
+                if not any(site in line for site in websiteList):
+                    file.write(line)
+                file.truncate()
+
 def websiteBlocker(hostsPath, websiteList, earlyTime, lateTime):
     redirect = "127.0.0.1"
 
@@ -16,35 +26,27 @@ def websiteBlocker(hostsPath, websiteList, earlyTime, lateTime):
     endTime = dt.now().year, dt.now().month, dt.now().day, lateTime
 
     # Website blocker will block if you're within the specified period of time
-    if beginTime < nowTime < endTime:
+    if beginTime < nowTime or beginTime > endTime:
         print("Sorry Not Allowed...")
     else:
         print("Allowed access!")
-    while True:
-        if beginTime < nowTime < endTime:
+    
+    if beginTime == nowTime:
+        if nowTime < endTime:
             with open(hostsPath, 'r+') as file:
                 content = file.read()
                 for site in websiteList:
-                    if site in content:
-                        pass
-                    else:
+                    if site not in content:
                         file.write(redirect + " " + site + "\n")
-        else:
-            with open(hostsPath, 'r+') as file:
-                content = file.readlines()
-                file.seek(0)
-            for line in content:
-                if not any(site in line for site in websiteList):
-                    file.write(line)
-                file.truncate()
-    time.sleep(5)
+    while True:
+        close_blocker(nowTime, endTime)
 
 
 if __name__ == '__main__':
     beginTime = dt.now().year, dt.now().month, dt.now().day, 9
     nowTime = dt.now().year, dt.now().month, dt.now().day, dt.now().hour
     lateTime = dt.now().year, dt.now().month, dt.now().day, 17
-    print(beginTime < nowTime < lateTime)
-    websiteList = ["www.facebook.com/"]
+    # print(beginTime < nowTime < lateTime)
+    websiteList = ["www.facebook.com"]
     hostsPath = "C:\Windows\System32\drivers\etc\hosts"
-    websiteBlocker(hostsPath, websiteList, 9, 17)
+    websiteBlocker(hostsPath, websiteList, 13, 17)
