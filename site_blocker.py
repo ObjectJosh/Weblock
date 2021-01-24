@@ -59,7 +59,7 @@ class Ui_MainWindow(object):
 
         # the first value in here is hour and second is minute
         self.time = []
-
+        self.saveNum = 0
     def setupUi(self, MainWindow):
         # window set up
         self.MainWindow = MainWindow
@@ -201,11 +201,16 @@ class Ui_MainWindow(object):
         self.addNewButton.clicked.connect(self.newRow)
 
     def saveClicked(self):
-        for i in range(len(self.sites)):
-            link = getWebsite(self.sites[i])
-            checked = self.checkBox[i].isChecked()
-            self.settingsList.append([link, checked])
-        writeFile(self.settingsList, "siteNames.csv")
+        if self.saveNum < 1:
+            for i in range(len(self.sites)):
+                link = getWebsite(self.sites[i])
+                checked = self.checkBox[i].isChecked()
+                if link != "":
+                    self.settingsList.append([link, checked])
+            writeFile(self.settingsList, "siteNames.csv")
+            self.saveNum += 1
+        else:
+            print("was saved!")
 
     def newRow(self):
         print("adding new row...")
