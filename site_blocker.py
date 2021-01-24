@@ -97,10 +97,10 @@ class Ui_MainWindow(object):
         self.gridLayoutWidget.setObjectName("gridLayoutWidget")
         self.durationGridLayout = QtWidgets.QGridLayout(self.gridLayoutWidget)
         self.durationGridLayout.setContentsMargins(0, 0, 0, 0)
-        #self.durationGridLayout.setStyleSheet("color:     #95bfe7")
         self.durationGridLayout.setObjectName("durationGridLayout")
         self.minutesField = QtWidgets.QTextEdit(self.gridLayoutWidget)
         self.minutesField.setMaximumSize(QtCore.QSize(16777215, 31))
+        self.minutesField.setStyleSheet("background-color: #c8daf2")
         self.minutesField.setObjectName("minutesField")
         self.durationGridLayout.addWidget(self.minutesField, 1, 1, 1, 1)
         self.minutesLabel = QtWidgets.QLabel(self.gridLayoutWidget)
@@ -109,7 +109,7 @@ class Ui_MainWindow(object):
         self.durationGridLayout.addWidget(self.minutesLabel, 0, 1, 1, 1, QtCore.Qt.AlignHCenter)
         self.hoursField = QtWidgets.QTextEdit(self.gridLayoutWidget)
         self.hoursField.setMaximumSize(QtCore.QSize(16777215, 31))
-        self.hoursField.setStyleSheet("color:     #95bfe7")
+        self.hoursField.setStyleSheet("background-color: #c8daf2")
         self.hoursField.setObjectName("hoursField")
         self.durationGridLayout.addWidget(self.hoursField, 1, 0, 1, 1)
         self.hoursLabel = QtWidgets.QLabel(self.gridLayoutWidget)
@@ -122,6 +122,7 @@ class Ui_MainWindow(object):
         self.titleLabel.setObjectName("titleLabel")
         self.saveButton = QtWidgets.QPushButton(self.centralwidget)
         self.saveButton.setGeometry(QtCore.QRect(320, 450, 111, 31))
+        self.saveButton.setStyleSheet("background-color: #173364; color:     #c8daf2")
         self.saveButton.setObjectName("saveButton")
         self.scrollArea = QtWidgets.QScrollArea(self.centralwidget)
         self.scrollArea.setGeometry(QtCore.QRect(100, 100, 576, 200))  # size for scroll area
@@ -304,14 +305,12 @@ class Ui_MainWindow(object):
     def createDelButton(self, row):
         _translate = QtCore.QCoreApplication.translate
         self.deleteButton.append(QtWidgets.QPushButton(self.scrollAreaWidgetContents))
-        self.deleteButton[self.dbIndex].setStyleSheet("background-color: #173364")
+        self.deleteButton[self.dbIndex].setStyleSheet("background-color: #173364; color: #c8daf2")
         self.deleteButton[self.dbIndex].setObjectName("deleteButton" + str(self.dbNum))
         self.deleteButton[self.dbIndex].setText(_translate("MainWindow", "Delete"))
         self.gridLayout.addWidget(self.deleteButton[self.dbIndex], row, 2, 1, 1)
         self.dbIndex += 1
         self.dbNum += 1
-
-
 
 if __name__ == "__main__":
     import sys
