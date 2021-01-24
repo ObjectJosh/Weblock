@@ -10,7 +10,8 @@
 # GUI for the first part of the site blocker (gets website names, time duration)
 
 from PyQt5 import QtCore, QtGui, QtWidgets
-
+from prototype import *
+import sys
 
 def getWebsite(QTSite):
     return str(QTSite.toPlainText())
@@ -71,6 +72,11 @@ class Ui_MainWindow(object):
         self.time = []
         self.saveNum = 0
 
+    def file2(self):
+        self.mainWindow = QtWidgets.QMainWindow()
+        self.ui = UIWindow()
+        self.ui.setupUi(self.mainWindow)
+        self.mainWindow.show()
 
     def setupUi(self, MainWindow):
         # window set up
@@ -122,7 +128,7 @@ class Ui_MainWindow(object):
         try:
             self.hoursField.setPlainText(self.hour)
             self.minutesField.setPlainText(self.minute)
-        except:
+        except AttributeError:
             print("no value")
         if len(self.website_list) > 0:
             rows = 4
@@ -159,7 +165,8 @@ class Ui_MainWindow(object):
         MainWindow.setStatusBar(self.statusbar)
         self.retranslateUi(MainWindow)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
-
+        self.saveButton.clicked.connect(self.file2)
+        self.saveButton.clicked.connect(MainWindow.hide)
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
         MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
@@ -239,13 +246,13 @@ class Ui_MainWindow(object):
             else:
                 self.settingsList.append(["0", "00"])
             writeFile(self.settingsList, "siteNames.csv")
-            self.saveNum += 1
-        else:
-            print("was saved!")
-            sys.exit(0)
 
     def deleteRow(self, row):
         self.deleteButton[row].deleteLater()
+        self.deleteButton.pop(0)
+        self.gridLayout.itemAt(0).widget().deleteLater()
+        self.gridLayout.itemAt(1).widget().deleteLater()
+        self.gridLayout.itemAt(2).widget().deleteLater()
 
     def newRow(self):
         print("adding new row...")
@@ -269,6 +276,7 @@ class Ui_MainWindow(object):
         self.gridLayout.addWidget(self.sites[self.siteIndex], row, 0, 1, 1)
         self.siteNum += 1
         self.siteIndex += 1
+        self.row += 1
 
     def createCheckBoxButton(self, row):
         self.checkBox.append(QtWidgets.QCheckBox(self.scrollAreaWidgetContents))
@@ -287,8 +295,6 @@ class Ui_MainWindow(object):
         self.dbIndex += 1
         self.dbNum += 1
 
-    def exit(self):
-        self.close()
 
 
 if __name__ == "__main__":
