@@ -76,6 +76,7 @@ class Ui_MainWindow(object):
         self.mainWindow = QtWidgets.QMainWindow()
         self.ui = UIWindow()
         self.ui.setupUi(self.mainWindow)
+        self.ui.connectActions(self.mainWindow)
         self.mainWindow.show()
 
     def setupUi(self, MainWindow):
