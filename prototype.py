@@ -9,15 +9,9 @@
 
 
 from PyQt5 import QtCore, QtGui, QtWidgets
-import time
+
 
 class UIWindow(object):
-    def __init__(self):
-        self.count = 0
-        self.start = False
-        self.timer = QtCore.QTimer()
-        self.timer.start(1000) # updates the timer display every second
-    
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("Web Blocker")
         MainWindow.resize(783, 566)
@@ -83,31 +77,10 @@ class UIWindow(object):
     
     def connectActions(self, MainWindow):
         self.confirmButton.clicked.connect(self.clicked)
-        self.timer.timeout.connect(self.countdown) 
-
-        self.count = 60 # < ------ CONNECT THIS TO THE TIME REMAINING (Hard coded to 1 minute right now)
-        print(self.count)
-        self.confirmButton.clicked.connect(self.startTimer)
 
 
     def clicked(self):
         print("button 1 was clicked")
-
-    def countdown(self):
-        if self.start:
-            self.count -= 1
-            if self.count == 0:
-                self.start = False
-                print("timer finished")
-            minutes, seconds = divmod(self.count, 60)
-            timeformat = '{:02d}:{:02d}'.format(minutes, seconds)
-            print(timeformat, end='\r')
-            self.timeDialog.display(timeformat)
-
-    def startTimer(self):
-        self.start = True
-        if self.count == 0:
-            self.start == False
 
 
 if __name__ == "__main__":
