@@ -2,6 +2,7 @@
 import time
 import datetime
 
+
 def time_differ(nowTime, endTime):
     """ This function calculates the time difference one one time to another
     and returns the minute difference
@@ -64,57 +65,56 @@ def countdown_time(times, wait):
         i += wait
         time.sleep(wait * 60)
 
+
 # websiteList -> list
 # earlyTime -> int
 # lateTime -> int
 # hostsPath -> string (taken from bash file so that we can use it for both Mac and Windows OS)
 
-def websiteBlocker(hostsPath, websiteList, earlyTime, lateTime):
-    """ This function blocks websites during earlyTime
-    and lateTime. Once duration is over it unblocks the
-    websites
-    
+def websiteBlocker(hostsPath, websiteList, hour, mins):
+    """ This function blocks the websites with inputed hour
+    and min. Once the new hour and min duration is over, the
+    funcion blocks the websites
+
     Args:
         hostsPath(str): Directory to the host file
         websiteList(list): A list of blocked website url
-        earlyTime(str): Start time in 24 hour format
-        lateTime(str): End time in 24 hour format
+        hour(int): How many hours are blocked
+        mins(int): How many mins are blocked
     """
     # Redirect to host file
     redirect = "127.0.0.1"
     
+    # Computing the end time
     beginTime = time.strftime('%H:%M:%S')[:5]
-
-    # Website blocker will block if you're within the specified period of time 
-    if beginTime > earlyTime:
-        print("Sorry Not Allowed...")
-    else:
-        print("Allowed access!")
+    hour_add = int(beginTime[:2]) + hour
+    minute_add = int(beginTime[3:5]) + mins
     
-    # Waits until current time == start time
-    if beginTime < earlyTime:
-        timer = time_differ(beginTime, earlyTime)
-        sleep = largest_divisible(timer)
-        countdown_time(timer, sleep)
+    if minute_add < 10:
+        minute_add = '0' + str(minute_add)
     
-    # Blocks the websites
+    endTime = str(hour_add) + ':' + str(minute_add)
+    print(endTime)
+    
     print('blocked')
+    # Then redirect the blocked websites
     with open(hostsPath, 'r+') as hostsfile:
         host_content = hostsfile.read()
         for site in websiteList:
             if site not in host_content:
                 hostsfile.write(redirect + " " + site + "\n")
     
-    # Wait until current time == end time
-    times = time_differ(earlyTime, lateTime)
+    # Then stalls the program until its time to unblock
+    times = time_differ(beginTime, endTime)
     sleeper = largest_divisible(times)
     countdown_time(times, sleeper)
     
-    # Unblocks the websites
+    # Unblocking the websites
     close_blocker()
     print('unblocked')
-    
+
+
 if __name__ == '__main__':
     websiteList = ["www.facebook.com"]
     hostsPath = "C:\Windows\System32\drivers\etc\hosts"
-    websiteBlocker(hostsPath, websiteList, '16:55', '16:56')
+    websiteBlocker(hostsPath, websiteList, 0, 1)
