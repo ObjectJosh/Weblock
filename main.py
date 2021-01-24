@@ -2,7 +2,6 @@ from PyQt5 import QtWidgets
 from PyQt5.QtWidgets import QApplication, QMainWindow
 import sys
 
-
 class UIWindow(QMainWindow):
     def __init__(self):
         super(UIWindow, self).__init__()
@@ -26,8 +25,6 @@ class UIWindow(QMainWindow):
     def update(self):
         self.label.adjustSize()
         print("button 1 was clicked")
-
-
 
 def window():
     app = QApplication(sys.argv)
