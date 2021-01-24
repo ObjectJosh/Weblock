@@ -53,13 +53,24 @@ class Ui_MainWindow(object):
         self.checkBox = []
         self.cbIndex = 0
 
-        self.website_list = readFile("siteNames.csv")
+        temp_list = readFile("siteNames.csv")
+
+        try:
+            int(temp_list[-1][0])
+            self.website_list = temp_list[:-1]
+            self.hour = temp_list[-1][0].strip()
+            self.minute = temp_list[-1][1].strip()
+        except IndexError:
+            self.website_list = []
+        except ValueError:
+            self.website_list = temp_list
 
         self.settingsList = []
 
         # the first value in here is hour and second is minute
         self.time = []
         self.saveNum = 0
+
     def setupUi(self, MainWindow):
         # window set up
         self.MainWindow = MainWindow
@@ -107,15 +118,20 @@ class Ui_MainWindow(object):
         self.gridLayout = QtWidgets.QGridLayout(self.scrollAreaWidgetContents)
         self.gridLayout.setObjectName("gridLayout")
 
+        try:
+            self.hoursField.setPlainText(self.hour)
+            self.minutesField.setPlainText(self.minute)
+        except:
+            print("no value")
         if len(self.website_list) > 0:
-            i = 4
+            rows = 4
             for websiteToggle in self.website_list:
-                self.createSite(i)
-                self.createCheckBoxButton(i)
-                self.createDelButton(i)
+                self.createSite(rows)
+                self.createCheckBoxButton(rows)
+                self.createDelButton(rows)
                 self.sites[self.siteIndex - 1].setPlainText(websiteToggle[0])
-                self.checkBox[self.cbIndex - 1].setChecked(bool(websiteToggle[1]))
-                i += 1
+                self.checkBox[self.cbIndex - 1].setChecked(websiteToggle[1].strip() == "True")
+                rows += 1
         else:
             for i in range(4, 6):
                 self.createSite(i)
@@ -200,6 +216,12 @@ class Ui_MainWindow(object):
         # Add New Row
         self.addNewButton.clicked.connect(self.newRow)
 
+        # Deleted a row
+        for button in self.deleteButton:
+            if button.clicked:
+                row = self.deleteButton.index(button)
+                self.deleteButton[row].clicked.connect(self.deleteRow)
+
     def saveClicked(self):
         if self.saveNum < 1:
             for i in range(len(self.sites)):
@@ -207,10 +229,15 @@ class Ui_MainWindow(object):
                 checked = self.checkBox[i].isChecked()
                 if link != "":
                     self.settingsList.append([link, checked])
+            if self.hoursField.toPlainText().strip() != "":
+                self.settingsList.append([self.hoursField.toPlainText().strip(), self.minutesField.toPlainText().strip()])
             writeFile(self.settingsList, "siteNames.csv")
             self.saveNum += 1
         else:
             print("was saved!")
+
+    def deleteRow(self, row):
+        self.deleteButton[row].deleteLater()
 
     def newRow(self):
         print("adding new row...")
