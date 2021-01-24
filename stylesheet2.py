@@ -11,10 +11,10 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
 
 
-class UIWindow(object):
+class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
-        MainWindow.setObjectName("Web Blocker")
-        MainWindow.resize(783, 600)
+        MainWindow.setObjectName("MainWindow")
+        MainWindow.resize(783, 566)
         MainWindow.setStyleSheet("background-color: #1961b2")
         self.centralwidget = QtWidgets.QWidget(MainWindow)
         self.centralwidget.setObjectName("centralwidget")
@@ -53,7 +53,7 @@ class UIWindow(object):
         self.checkBox.setObjectName("checkBox")
         self.verticalLayout.addWidget(self.checkBox)
         self.confirmButton = QtWidgets.QPushButton(self.centralwidget)
-        self.confirmButton.setGeometry(QtCore.QRect(310, 490, 121, 32))
+        self.confirmButton.setGeometry(QtCore.QRect(310, 470, 121, 32))
         self.confirmButton.setStyleSheet("color:     #c8daf2; background-color: #173364")
         self.confirmButton.setObjectName("confirmButton")
         self.timeDialog = QtWidgets.QLCDNumber(self.centralwidget)
@@ -62,8 +62,7 @@ class UIWindow(object):
         self.timeDialog.setStyleSheet("background-color:    #c8daf2; color:     #173364")
         self.timeDialog.setObjectName("timeDialog")
         self.timeRemaining = QtWidgets.QLabel(self.centralwidget)
-        self.timeRemaining.setGeometry(QtCore.QRect(305, 26, 140, 20))
-        self.timeRemaining.setFont(QtGui.QFont("Arial", 18))
+        self.timeRemaining.setGeometry(QtCore.QRect(320, 26, 101, 20))
         self.timeRemaining.setStyleSheet("color:     #c8daf2")
         self.timeRemaining.setObjectName("timeRemaining")
         MainWindow.setCentralWidget(self.centralwidget)
@@ -77,28 +76,20 @@ class UIWindow(object):
 
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
-        MainWindow.setWindowTitle(_translate("Web Blocker", "Web Blocker"))
-        self.q1label.setText(_translate("Web Blocker", "Why would you like to stop blocking?"))
-        self.q2label.setText(_translate("Web Blocker", "What are you currently working on right now?"))
-        self.q3label.setText(_translate("Web Blocker", "What do you still need to get done?"))
+        MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
+        self.q1label.setText(_translate("MainWindow", "Why would you like to stop blocking?"))
+        self.q2label.setText(_translate("MainWindow", "What are you currently working on right now?"))
+        self.q3label.setText(_translate("MainWindow", "What do you still need to get done?"))
         self.checkBox.setText(_translate("MainWindow", "I hereby agree that I am unblocking these sites for a good reason "))
-        self.confirmButton.setText(_translate("Web Blocker", "Confirm"))
-        self.timeRemaining.setText(_translate("Web Blocker", "Time Remaining"))
-    
-    def connectActions(self, MainWindow):
-        self.confirmButton.clicked.connect(self.clicked)
-
-
-    def clicked(self):
-        print("button 1 was clicked")
+        self.confirmButton.setText(_translate("MainWindow", "Confirm"))
+        self.timeRemaining.setText(_translate("MainWindow", "<html><head/><body><p align=\"center\"><span style=\" font-size:18pt;\">Time Remaining</span></p></body></html>"))
 
 
 if __name__ == "__main__":
     import sys
     app = QtWidgets.QApplication(sys.argv)
     MainWindow = QtWidgets.QMainWindow()
-    ui = UIWindow()
+    ui = Ui_MainWindow()
     ui.setupUi(MainWindow)
-    ui.connectActions(MainWindow)
     MainWindow.show()
     sys.exit(app.exec_())

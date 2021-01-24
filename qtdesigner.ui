@@ -7,11 +7,14 @@
     <x>0</x>
     <y>0</y>
     <width>783</width>
-    <height>566</height>
+    <height>599</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>MainWindow</string>
+  </property>
+  <property name="styleSheet">
+   <string notr="true">background-color: #1961b2</string>
   </property>
   <widget class="QWidget" name="centralwidget">
    <widget class="QWidget" name="verticalLayoutWidget">
@@ -26,36 +29,60 @@
     <layout class="QVBoxLayout" name="verticalLayout">
      <item>
       <widget class="QLabel" name="q1label">
+       <property name="styleSheet">
+        <string notr="true">color: 	#95bfe7; background-color: #173364</string>
+       </property>
        <property name="text">
         <string>Why would you like to stop blocking?</string>
        </property>
       </widget>
      </item>
      <item>
-      <widget class="QTextEdit" name="q1input"/>
+      <widget class="QTextEdit" name="q1input">
+       <property name="styleSheet">
+        <string notr="true">background-color: #c8daf2</string>
+       </property>
+      </widget>
      </item>
      <item>
       <widget class="QLabel" name="q2label">
+       <property name="styleSheet">
+        <string notr="true">color: 	#95bfe7; background-color: #173364</string>
+       </property>
        <property name="text">
         <string>What are you currently working on right now?</string>
        </property>
       </widget>
      </item>
      <item>
-      <widget class="QTextEdit" name="q2input"/>
+      <widget class="QTextEdit" name="q2input">
+       <property name="styleSheet">
+        <string notr="true">background-color: #c8daf2</string>
+       </property>
+      </widget>
      </item>
      <item>
       <widget class="QLabel" name="q3label">
+       <property name="styleSheet">
+        <string notr="true">color: 	#95bfe7; background-color: #173364</string>
+       </property>
        <property name="text">
         <string>What do you still need to get done?</string>
        </property>
       </widget>
      </item>
      <item>
-      <widget class="QTextEdit" name="q3input"/>
+      <widget class="QTextEdit" name="q3input">
+       <property name="styleSheet">
+        <string notr="true">background-color: #c8daf2</string>
+       </property>
+      </widget>
      </item>
      <item>
       <widget class="QCheckBox" name="checkBox">
+       <property name="styleSheet">
+        <string notr="true">color: 	#95bfe7</string>
+       </property>
        <property name="text">
         <string>I hereby agree that I am unblocking these sites for a good reason </string>
        </property>
@@ -72,6 +99,9 @@
       <height>32</height>
      </rect>
     </property>
+    <property name="styleSheet">
+     <string notr="true">color: 	#c8daf2; background-color: #173364</string>
+    </property>
     <property name="text">
      <string>Confirm</string>
     </property>
@@ -85,18 +115,30 @@
       <height>61</height>
      </rect>
     </property>
+    <property name="minimumSize">
+     <size>
+      <width>191</width>
+      <height>61</height>
+     </size>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color:	#c8daf2; color: 	#173364</string>
+    </property>
    </widget>
    <widget class="QLabel" name="timeRemaining">
     <property name="geometry">
      <rect>
-      <x>320</x>
-      <y>26</y>
-      <width>101</width>
-      <height>20</height>
+      <x>290</x>
+      <y>10</y>
+      <width>141</width>
+      <height>31</height>
      </rect>
     </property>
+    <property name="styleSheet">
+     <string notr="true">color: 	#c8daf2</string>
+    </property>
     <property name="text">
-     <string>Time Remaining</string>
+     <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-size:18pt;&quot;&gt;Time Remaining&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
     </property>
    </widget>
   </widget>
@@ -110,7 +152,6 @@
     </rect>
    </property>
   </widget>
-  <widget class="QStatusBar" name="statusbar"/>
  </widget>
  <resources/>
  <connections/>
