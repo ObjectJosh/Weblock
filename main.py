@@ -1,36 +1,34 @@
-from PyQt5 import QtWidgets
-from PyQt5.QtWidgets import QApplication, QMainWindow
-import sys
+from site_blocker import *
+from adding_current_time import *
 
-class UIWindow(QMainWindow):
-    def __init__(self):
-        super(UIWindow, self).__init__()
-        self.setGeometry(200, 200, 300, 300)
-        self.setWindowTitle("Web Blocker")
-        self.initUI()
+def make_website_list(load):
+    websites = load[:-1]
+    website_list = []
+    for website in websites:
+        website_list.append(website[0])
+    return website_list
 
-    def initUI(self):
-        self.label = QtWidgets.QLabel(self)
-        self.label.setText("Label 1")
-        self.label.move(50, 50)
+def get_hour(load):
+    return load[-1][0]
 
-        self.button1 = QtWidgets.QPushButton(self)
-        self.button1.setText("Button 1")
-        self.button1.clicked.connect(self.clicked)
+def get_minute(load):
+    return load[-1][1]
 
-    def clicked(self):
-        self.label.setText("you have clicked the button at least once")
-        self.update()
+if __name__ == "__main__":
+    import sys
 
-    def update(self):
-        self.label.adjustSize()
-        print("button 1 was clicked")
-
-def window():
-    app = QApplication(sys.argv)
-    win = UIWindow()
-    
-    win.show()
+    app = QtWidgets.QApplication(sys.argv)
+    MainWindow = QtWidgets.QMainWindow()
+    ui = Ui_MainWindow()
+    ui.setupUi(MainWindow)
+    ui.connectActions()
+    MainWindow.show()
+    if ui.saveNum == 1:
+        load = readFile("siteNames.csv")
+        website_list = make_website_list(load)
+        hour = get_hour(load)
+        minute = get_minute(load)
+        websiteBlocker(r"C:\Windows\System32\drivers\etc", website_list, hour, minute)
     sys.exit(app.exec_())
 
-window()
+
