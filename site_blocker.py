@@ -71,6 +71,7 @@ class Ui_MainWindow(object):
         self.time = []
         self.saveNum = 0
 
+
     def setupUi(self, MainWindow):
         # window set up
         self.MainWindow = MainWindow
@@ -229,12 +230,19 @@ class Ui_MainWindow(object):
                 checked = self.checkBox[i].isChecked()
                 if link != "":
                     self.settingsList.append([link, checked])
-            if self.hoursField.toPlainText().strip() != "":
+            if self.hoursField.toPlainText().strip() != "" and self.minutesField.toPlainText().strip():
                 self.settingsList.append([self.hoursField.toPlainText().strip(), self.minutesField.toPlainText().strip()])
+            elif self.hoursField.toPlainText().strip() != "" and self.minutesField.toPlainText().strip() == "":
+                self.settingsList.append([self.hoursField.toPlainText().strip(), "00"])
+            elif self.hoursField.toPlainText().strip() == "" and self.minutesField.toPlainText().strip() != "":
+                self.settingsList.append(["0", self.minutesField.toPlainText().strip()])
+            else:
+                self.settingsList.append(["0", "00"])
             writeFile(self.settingsList, "siteNames.csv")
             self.saveNum += 1
         else:
             print("was saved!")
+            sys.exit(0)
 
     def deleteRow(self, row):
         self.deleteButton[row].deleteLater()
@@ -278,6 +286,9 @@ class Ui_MainWindow(object):
         self.gridLayout.addWidget(self.deleteButton[self.dbIndex], row, 2, 1, 1)
         self.dbIndex += 1
         self.dbNum += 1
+
+    def exit(self):
+        self.close()
 
 
 if __name__ == "__main__":
