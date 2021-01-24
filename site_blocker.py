@@ -9,8 +9,6 @@
 
 
 from PyQt5 import QtCore, QtGui, QtWidgets
-from Website import *
-from WebsiteList import *
 
 
 def getWebsite(QTSite):
