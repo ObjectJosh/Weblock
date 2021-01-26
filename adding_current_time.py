@@ -2,7 +2,6 @@
 import time
 import datetime
 
-
 def time_differ(nowTime, endTime):
     """ This function calculates the time difference one one time to another
     and returns the minute difference
@@ -38,15 +37,16 @@ def largest_divisible(number):
             return n
         n -= 1
 
-def close_blocker():
+def close_blocker(website_list):
     """ This function instantly deletes the website blocker and 
     stops the program
     """
+    hostsPath = "C:\Windows\System32\drivers\etc\hosts"
     with open(hostsPath, 'r+') as file:
         content = file.readlines()
-        file.seek(0)
+        file.seek(1)
         for line in content:
-            if not any(site in line for site in websiteList):
+            if not any(site in line for site in website_list):
                 file.write(line)
             file.truncate()
     running = False
@@ -86,16 +86,17 @@ def websiteBlocker(hostsPath, websiteList, hour, mins):
     redirect = "127.0.0.1"
     
     # Computing the end time
-    beginTime = time.strftime('%H:%M:%S')[:5]
-    hour_add = int(beginTime[:2]) + hour
-    minute_add = int(beginTime[3:5]) + mins
+    """beginTime = time.strftime('%H:%M:%S')[:5]
+    hour_add = int(beginTime[:2]) + int(hour)
+    minute_add = int(beginTime[3:5]) + int(mins)
+    
     
     if minute_add < 10:
         minute_add = '0' + str(minute_add)
     
     endTime = str(hour_add) + ':' + str(minute_add)
     print(endTime)
-    
+    """
     print('blocked')
     # Then redirect the blocked websites
     with open(hostsPath, 'r+') as hostsfile:
@@ -105,6 +106,7 @@ def websiteBlocker(hostsPath, websiteList, hour, mins):
                 hostsfile.write(redirect + " " + site + "\n")
     
     # Then stalls the program until its time to unblock
+    """
     times = time_differ(beginTime, endTime)
     sleeper = largest_divisible(times)
     countdown_time(times, sleeper)
@@ -112,9 +114,9 @@ def websiteBlocker(hostsPath, websiteList, hour, mins):
     # Unblocking the websites
     close_blocker()
     print('unblocked')
-
+    """
 
 if __name__ == '__main__':
-    websiteList = ["www.facebook.com"]
+    websiteList = ["m.mangabat.com", "mangabat.com"]
     hostsPath = "C:\Windows\System32\drivers\etc\hosts"
-    websiteBlocker(hostsPath, websiteList, 0, 1)
+    websiteBlocker(hostsPath, websiteList, 0, 5)
