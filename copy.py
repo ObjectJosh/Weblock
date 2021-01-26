@@ -11,7 +11,6 @@
 
 from PyQt5 import QtCore, QtGui, QtWidgets
 from prototype import *
-from adding_current_time import *
 import sys
 
 def getWebsite(QTSite):
@@ -54,24 +53,19 @@ class Ui_MainWindow(object):
         self.cbNum = 1
         self.checkBox = []
         self.cbIndex = 0
-        
-        self.hour = 0
-        self.minute = 0
-        self.website_list = []
 
         temp_list = readFile("siteNames.csv")
 
         try:
             int(temp_list[-1][0])
             self.website_list = temp_list[:-1]
-            #self.hour = temp_list[-1][0].strip()
-            #self.minute = temp_list[-1][1].strip()
-        except IndexError: 
+            self.hour = temp_list[-1][0].strip()
+            self.minute = temp_list[-1][1].strip()
+        except IndexError:
             self.website_list = []
         except ValueError:
             self.website_list = temp_list
 
-        
         self.settingsList = []
 
         # the first value in here is hour and second is minute
@@ -83,8 +77,6 @@ class Ui_MainWindow(object):
         self.ui = UIWindow()
         self.ui.setupUi(self.mainWindow)
         self.ui.connectActions(self.mainWindow)
-        # self.ui.setHour(int(self.hour))
-        # self.ui.setMinute(int(self.minute))
         self.mainWindow.show()
 
     def setupUi(self, MainWindow):
@@ -105,10 +97,10 @@ class Ui_MainWindow(object):
         self.gridLayoutWidget.setObjectName("gridLayoutWidget")
         self.durationGridLayout = QtWidgets.QGridLayout(self.gridLayoutWidget)
         self.durationGridLayout.setContentsMargins(0, 0, 0, 0)
+        #self.durationGridLayout.setStyleSheet("color:     #95bfe7")
         self.durationGridLayout.setObjectName("durationGridLayout")
         self.minutesField = QtWidgets.QTextEdit(self.gridLayoutWidget)
         self.minutesField.setMaximumSize(QtCore.QSize(16777215, 31))
-        self.minutesField.setStyleSheet("background-color: #c8daf2")
         self.minutesField.setObjectName("minutesField")
         self.durationGridLayout.addWidget(self.minutesField, 1, 1, 1, 1)
         self.minutesLabel = QtWidgets.QLabel(self.gridLayoutWidget)
@@ -117,7 +109,7 @@ class Ui_MainWindow(object):
         self.durationGridLayout.addWidget(self.minutesLabel, 0, 1, 1, 1, QtCore.Qt.AlignHCenter)
         self.hoursField = QtWidgets.QTextEdit(self.gridLayoutWidget)
         self.hoursField.setMaximumSize(QtCore.QSize(16777215, 31))
-        self.hoursField.setStyleSheet("background-color: #c8daf2")
+        self.hoursField.setStyleSheet("color:     #95bfe7")
         self.hoursField.setObjectName("hoursField")
         self.durationGridLayout.addWidget(self.hoursField, 1, 0, 1, 1)
         self.hoursLabel = QtWidgets.QLabel(self.gridLayoutWidget)
@@ -130,7 +122,6 @@ class Ui_MainWindow(object):
         self.titleLabel.setObjectName("titleLabel")
         self.saveButton = QtWidgets.QPushButton(self.centralwidget)
         self.saveButton.setGeometry(QtCore.QRect(320, 450, 111, 31))
-        self.saveButton.setStyleSheet("background-color: #173364; color:     #c8daf2")
         self.saveButton.setObjectName("saveButton")
         self.scrollArea = QtWidgets.QScrollArea(self.centralwidget)
         self.scrollArea.setGeometry(QtCore.QRect(100, 100, 576, 200))  # size for scroll area
@@ -144,22 +135,24 @@ class Ui_MainWindow(object):
         self.gridLayout.setObjectName("gridLayout")
 
         try:
-            if len(self.website_list) > 0:
-                rows = 4
-                for websiteToggle in self.website_list:
-                    self.createSite(rows)
-                    self.createCheckBoxButton(rows)
-                    self.createDelButton(rows)
-                    self.sites[self.siteIndex - 1].setPlainText(websiteToggle[0])
-                    self.checkBox[self.cbIndex - 1].setChecked(websiteToggle[1].strip() == "True")
-                    rows += 1
-        
+            self.hoursField.setPlainText(self.hour)
+            self.minutesField.setPlainText(self.minute)
         except AttributeError:
+            print("no value")
+        if len(self.website_list) > 0:
+            rows = 4
+            for websiteToggle in self.website_list:
+                self.createSite(rows)
+                self.createCheckBoxButton(rows)
+                self.createDelButton(rows)
+                self.sites[self.siteIndex - 1].setPlainText(websiteToggle[0])
+                self.checkBox[self.cbIndex - 1].setChecked(websiteToggle[1].strip() == "True")
+                rows += 1
+        else:
             for i in range(4, 6):
                 self.createSite(i)
                 self.createCheckBoxButton(i)
                 self.createDelButton(i)
-
 
         self.blockedLabel = QtWidgets.QLabel(self.scrollAreaWidgetContents)
         self.blockedLabel.setStyleSheet("color:     #95bfe7")
@@ -250,7 +243,6 @@ class Ui_MainWindow(object):
                 row = self.deleteButton.index(button)
                 self.deleteButton[row].clicked.connect(self.deleteRow)
 
-    
     def saveClicked(self):
         if self.saveNum < 1:
             for i in range(len(self.sites)):
@@ -259,45 +251,15 @@ class Ui_MainWindow(object):
                 if link != "":
                     self.settingsList.append([link, checked])
             if self.hoursField.toPlainText().strip() != "" and self.minutesField.toPlainText().strip():
-                #self.settingsList.append([self.hoursField.toPlainText().strip(), self.minutesField.toPlainText().strip()])
-                self.hour = self.hoursField.toPlainText().strip()
-                self.minute = self.minutesField.toPlainText().strip()
-            
+                self.settingsList.append([self.hoursField.toPlainText().strip(), self.minutesField.toPlainText().strip()])
             elif self.hoursField.toPlainText().strip() != "" and self.minutesField.toPlainText().strip() == "":
-                #self.settingsList.append([self.hoursField.toPlainText().strip(), "00"])
-                self.minute = 0
-                self.hour = self.hoursField.toPlainText().strip()
-            
+                self.settingsList.append([self.hoursField.toPlainText().strip(), "00"])
             elif self.hoursField.toPlainText().strip() == "" and self.minutesField.toPlainText().strip() != "":
-                #self.settingsList.append(["0", self.minutesField.toPlainText().strip()])
-                self.hour = 0
-                self.minute = self.minutesField.toPlainText().strip()
-        
-            websites = []
-            print(len(self.settingsList))
-            for i in range(len(self.settingsList)):
-                print('sett')
-                print(self.settingsList[i])
-                sites = self.settingsList[i]
-                link = sites[0]
-                websites.append(link)
-                writeFile(self.settingsList, "siteNames.csv")
-        
-        self.ui.setHour(int(self.hour))
-        self.ui.setMinute(int(self.minute))
-        print('web')
-        print(websites)
-        websiteBlocker("C:\Windows\System32\drivers\etc\hosts", websites, self.hour, self.minute)
-        
-        self.hour = self.hoursField.toPlainText().strip()
-        self.minute = self.minutesField.toPlainText().strip()
-    
-    def getMinute(self):
-        return self.minute
+                self.settingsList.append(["0", self.minutesField.toPlainText().strip()])
+            else:
+                self.settingsList.append(["0", "00"])
+            writeFile(self.settingsList, "siteNames.csv")
 
-    def getHour(self):
-        return self.hour
-    
     def deleteRow(self, row):
         self.deleteButton[row].deleteLater()
         self.deleteButton.pop(0)
@@ -342,12 +304,14 @@ class Ui_MainWindow(object):
     def createDelButton(self, row):
         _translate = QtCore.QCoreApplication.translate
         self.deleteButton.append(QtWidgets.QPushButton(self.scrollAreaWidgetContents))
-        self.deleteButton[self.dbIndex].setStyleSheet("background-color: #173364; color: #c8daf2")
+        self.deleteButton[self.dbIndex].setStyleSheet("background-color: #173364")
         self.deleteButton[self.dbIndex].setObjectName("deleteButton" + str(self.dbNum))
         self.deleteButton[self.dbIndex].setText(_translate("MainWindow", "Delete"))
         self.gridLayout.addWidget(self.deleteButton[self.dbIndex], row, 2, 1, 1)
         self.dbIndex += 1
         self.dbNum += 1
+
+
 
 if __name__ == "__main__":
     import sys
