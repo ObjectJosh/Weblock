@@ -74,7 +74,7 @@ class Ui_MainWindow(object):
         # Window set up
         self.MainWindow = MainWindow
         MainWindow.setObjectName("MainWindow")
-        MainWindow.resize(800, 630)
+        MainWindow.resize(settings.window_size[0], settings.window_size[1])
         window_width = int(self.MainWindow.frameGeometry().width())
         window_height = int(self.MainWindow.frameGeometry().height())
         MainWindow.setStyleSheet("background-color: #1961b2\n")
