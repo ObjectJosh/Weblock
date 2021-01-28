@@ -60,6 +60,7 @@ class UIWindow(object):
         self.timeDialog.setGeometry(QtCore.QRect(270, 50, 191, 61))
         self.timeDialog.setMinimumSize(QtCore.QSize(191, 61))
         self.timeDialog.setStyleSheet("background-color:    #c8daf2; color:     #173364")
+        self.timeDialog.display("00:00")
         self.timeDialog.setObjectName("timeDialog")
         self.timeRemaining = QtWidgets.QLabel(self.centralwidget)
         self.timeRemaining.setGeometry(QtCore.QRect(305, 26, 140, 20))

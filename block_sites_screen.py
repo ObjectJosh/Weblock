@@ -71,58 +71,73 @@ class Ui_MainWindow(object):
         self.mainWindow.show()
 
     def setupUi(self, MainWindow):
-        # window set up
+        # Window set up
         self.MainWindow = MainWindow
         MainWindow.setObjectName("MainWindow")
-        MainWindow.resize(787, 622)
-        MainWindow.setStyleSheet("background-color: #1961b2\n"
-        "")
+        MainWindow.resize(800, 630)
+        window_width = int(self.MainWindow.frameGeometry().width())
+        window_height = int(self.MainWindow.frameGeometry().height())
+        MainWindow.setStyleSheet("background-color: #1961b2\n")
+        # Central Widget
         self.centralwidget = QtWidgets.QWidget(MainWindow)
         self.centralwidget.setObjectName("centralwidget")
+        # Set Duration Label (change this to move "Set Duration" label)
         self.setDurationLabel = QtWidgets.QLabel(self.centralwidget)
-        self.setDurationLabel.setGeometry(QtCore.QRect(300, 329, 141, 31))
-        self.setDurationLabel.setStyleSheet("color:     #95bfe7")
+        self.setDurationLabel.setGeometry(QtCore.QRect((window_width / 2) - 70, (window_height / 2) + 50, 140, 30))
+        self.setDurationLabel.setStyleSheet("color: #95bfe7")
         self.setDurationLabel.setObjectName("setDurationLabel")
+        # Grid Layout for Sites (change this to move hour/minute text fields)
         self.gridLayoutWidget = QtWidgets.QWidget(self.centralwidget)
-        self.gridLayoutWidget.setGeometry(QtCore.QRect(240, 359, 266, 63))
+        self.gridLayoutWidget.setGeometry(QtCore.QRect((window_width / 2) - 133, (window_height / 2) + 50, 266, 64))
         self.gridLayoutWidget.setObjectName("gridLayoutWidget")
+        # Grid Layout for Duration
         self.durationGridLayout = QtWidgets.QGridLayout(self.gridLayoutWidget)
         self.durationGridLayout.setContentsMargins(0, 0, 0, 0)
         self.durationGridLayout.setObjectName("durationGridLayout")
+        # Minutes Text Field
         self.minutesField = QtWidgets.QTextEdit(self.gridLayoutWidget)
-        self.minutesField.setMaximumSize(QtCore.QSize(16777215, 31))
+        self.minutesField.setMaximumSize(QtCore.QSize(150, 30))
         self.minutesField.setStyleSheet("background-color: #c8daf2")
         self.minutesField.setObjectName("minutesField")
         self.durationGridLayout.addWidget(self.minutesField, 1, 1, 1, 1)
+        # Minutes Label
         self.minutesLabel = QtWidgets.QLabel(self.gridLayoutWidget)
-        self.minutesLabel.setStyleSheet("color:     #95bfe7")
+        self.minutesLabel.setStyleSheet("color: #95bfe7")
         self.minutesLabel.setObjectName("minutesLabel")
         self.durationGridLayout.addWidget(self.minutesLabel, 0, 1, 1, 1, QtCore.Qt.AlignHCenter)
+        # Hours Text Field
         self.hoursField = QtWidgets.QTextEdit(self.gridLayoutWidget)
-        self.hoursField.setMaximumSize(QtCore.QSize(16777215, 31))
+        self.hoursField.setMaximumSize(QtCore.QSize(150, 25))
         self.hoursField.setStyleSheet("background-color: #c8daf2")
+        self.hoursField.setText("hello")
+        self.hoursField.setPlainText("heloo")
         self.hoursField.setObjectName("hoursField")
         self.durationGridLayout.addWidget(self.hoursField, 1, 0, 1, 1)
+        # Hours Label
         self.hoursLabel = QtWidgets.QLabel(self.gridLayoutWidget)
         self.hoursLabel.setStyleSheet("color:     #95bfe7")
         self.hoursLabel.setObjectName("hoursLabel")
         self.durationGridLayout.addWidget(self.hoursLabel, 0, 0, 1, 1, QtCore.Qt.AlignHCenter)
+        # Title Label: "Web Blocker"
         self.titleLabel = QtWidgets.QLabel(self.centralwidget)
-        self.titleLabel.setGeometry(QtCore.QRect(270, 40, 231, 51))
+        self.titleLabel.setGeometry(QtCore.QRect((window_width / 2) - 120, (window_height / 2) - 270, 240, 50))
         self.titleLabel.setStyleSheet("color:     #95bfe7")
         self.titleLabel.setObjectName("titleLabel")
+        # Save Button (change this to move the Save button)
         self.saveButton = QtWidgets.QPushButton(self.centralwidget)
-        self.saveButton.setGeometry(QtCore.QRect(320, 450, 111, 31))
+        self.saveButton.setGeometry(QtCore.QRect((window_width / 2) - 55, (window_height / 2) + 140, 110, 31))
         self.saveButton.setStyleSheet("background-color: #173364; color:     #c8daf2")
         self.saveButton.setObjectName("saveButton")
+        # Scroll Area for Sites (change this to move sites box)
         self.scrollArea = QtWidgets.QScrollArea(self.centralwidget)
-        self.scrollArea.setGeometry(QtCore.QRect(100, 100, 576, 200))  # size for scroll area
+        self.scrollArea.setGeometry(QtCore.QRect((window_width / 2) - 288, (window_height / 2) - 200, 576, 200))  # size for scroll area
         self.scrollArea.setMaximumSize(QtCore.QSize(576, 16777215))
         self.scrollArea.setWidgetResizable(True)
         self.scrollArea.setObjectName("scrollArea")
         self.scrollAreaWidgetContents = QtWidgets.QWidget()
         self.scrollAreaWidgetContents.setGeometry(QtCore.QRect(0, 0, 559, 136))
         self.scrollAreaWidgetContents.setObjectName("scrollAreaWidgetContents")
+        # Grid Layout
         self.gridLayout = QtWidgets.QGridLayout(self.scrollAreaWidgetContents)
         self.gridLayout.setObjectName("gridLayout")
 
@@ -197,7 +212,7 @@ class Ui_MainWindow(object):
                                            "charset=\"utf-8\" /><style type=\"text/css\">\n "
                                            "p, li { white-space: pre-wrap; }\n"
                                            "</style></head><body style=\" font-family:\'.AppleSystemUIFont\'; "
-                                           "font-size:13pt; font-weight:400; font-style:normal;\">\n "
+                                           "font-size:15pt; font-weight:400; font-style:normal;\">\n "
                                            "<p align=\"center\" style=\"-qt-paragraph-type:empty; margin-top:0px; "
                                            "margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; "
                                            "text-indent:0px;\"><br /></p></body></html>"))
