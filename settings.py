@@ -1,5 +1,7 @@
-def init(path, size_tuple):
+def init(path, block_size_tuple, survey_size_tuple):
     global hostPath
-    global window_size
+    global block_window_size
+    global survey_window_size
     hostPath = path
-    window_size = size_tuple
+    block_window_size = block_size_tuple
+    survey_window_size = survey_size_tuple
