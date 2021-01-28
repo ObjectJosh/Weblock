@@ -5,13 +5,14 @@ import settings
 import platform
 
 if __name__ == "__main__":
-    size_tuple = (800, 630)
+    block_size_tuple = (800, 630)
+    survey_size_tuple = (780, 600)
     hostPath = ""
     if platform.system() == "Darwin":
         hostPath = r"/private/etc/hosts"
     elif platform.system() == "Windows":
         hostPath = r"C:\Windows\System32\drivers\etc\hosts"
-    settings.init(hostPath, size_tuple)
+    settings.init(hostPath, block_size_tuple, survey_size_tuple)
     app = QtWidgets.QApplication(sys.argv)
     MainWindow = QtWidgets.QMainWindow()
     ui = screen_file.Ui_MainWindow()
