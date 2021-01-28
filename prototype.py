@@ -32,6 +32,13 @@ from adding_current_time import *
 import main
 #from site_blocker import get_website_list
 
+def get_sites(time_list):
+    site_lists = []
+    for i in time_list: 
+        site_lists.append(i[0])
+    return site_lists
+
+
 class UIWindow(object):
     def __init__(self):
         self.count = 0
@@ -40,6 +47,10 @@ class UIWindow(object):
         self.timer = QtCore.QTimer()
         self.timer.start(1000) # updates the timer display every second
         self.time_list = readFile("siteNames.csv")
+        print('list')
+        print(self.time_list)
+        self.website_list = get_sites(self.time_list)
+        
         #self.hour = Ui_MainWindow.getHour() #get_hour(time_list)
         #self.minute = Ui_MainWindow.getMinute()#get_minute(time_list)
     
@@ -87,16 +98,20 @@ class UIWindow(object):
         self.confirmButton.setGeometry(QtCore.QRect(310, 490, 121, 32))
         self.confirmButton.setStyleSheet("color:     #c8daf2; background-color: #173364")
         self.confirmButton.setObjectName("confirmButton")
+        
         self.timeDialog = QtWidgets.QLCDNumber(self.centralwidget)
         self.timeDialog.setGeometry(QtCore.QRect(270, 50, 191, 61))
         self.timeDialog.setMinimumSize(QtCore.QSize(191, 61))
         self.timeDialog.setStyleSheet("background-color:    #c8daf2; color:     #173364")
+        self.timeDialog.display('00:00')
         self.timeDialog.setObjectName("timeDialog")
+        
         self.timeRemaining = QtWidgets.QLabel(self.centralwidget)
         self.timeRemaining.setGeometry(QtCore.QRect(305, 26, 140, 20))
         self.timeRemaining.setFont(QtGui.QFont("Arial", 18))
         self.timeRemaining.setStyleSheet("color:     #c8daf2")
         self.timeRemaining.setObjectName("timeRemaining")
+        
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QtWidgets.QMenuBar(MainWindow)
         self.menubar.setGeometry(QtCore.QRect(0, 0, 783, 22))
@@ -125,29 +140,30 @@ class UIWindow(object):
         self.seconds = 1
         #self.confirmButton.clicked.connect(self.startTimer)
 
-    def clicked(self):
-        print("button 1 was clicked")
-
     def get_sites(self):
         site_lists = []
         for i in self.time_list: 
             site_lists.append(i[0])
         return site_lists
-
+    
+    def clicked(self):
+        close_blocker(self.website_list)
+        self.hour = 0
+        self.minute = 0
+        self.seconds = 0
     
     def countdown(self):
-        websites = self.get_sites()
         if self.start == True:
             self.seconds -= 1
 
             if self.hour == 0 and self.minute == 0 and self.seconds == 0:
                 self.minute = 0
                 self.start = False
-                close_blocker(websites)
+                close_blocker(self.website_list)
                 print('Timer done')
 
             elif self.seconds == 0:
-                self.seconds = 15
+                self.seconds = 60
                 self.minute -= 1
 
             if self.minute == -1 and self.hour != 0:

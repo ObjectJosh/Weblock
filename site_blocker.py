@@ -13,6 +13,7 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 from prototype import *
 from adding_current_time import *
 import sys
+import platform
 
 def getWebsite(QTSite):
     return str(QTSite.toPlainText())

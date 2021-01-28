@@ -2,40 +2,40 @@
 import time
 import datetime
 
-def time_differ(nowTime, endTime):
-    """ This function calculates the time difference one one time to another
-    and returns the minute difference
+# def time_differ(nowTime, endTime):
+#     """ This function calculates the time difference one one time to another
+#     and returns the minute difference
     
-    Args:
-        nowTime(int): The earlier time
-        endTime(int): The later time
+#     Args:
+#         nowTime(int): The earlier time
+#         endTime(int): The later time
     
-    Returns:
-         time(int): Return the minute difference
-    """
-    timeA = datetime.datetime.strptime(endTime, "%H:%M")
-    timeB = datetime.datetime.strptime(nowTime, "%H:%M")
-    newTime = timeA - timeB
-    return newTime.seconds/60
+#     Returns:
+#          time(int): Return the minute difference
+#     """
+#     timeA = datetime.datetime.strptime(endTime, "%H:%M")
+#     timeB = datetime.datetime.strptime(nowTime, "%H:%M")
+#     newTime = timeA - timeB
+#     return newTime.seconds/60
 
-def largest_divisible(number):
-    """ This function finds the largest divisible number for an int
-    between 0 - 200, and returns the largest divisible. 
+# def largest_divisible(number):
+#     """ This function finds the largest divisible number for an int
+#     between 0 - 200, and returns the largest divisible. 
 
-    Args:
-        number(int): Any int
+#     Args:
+#         number(int): Any int
     
-    Returns:
-        int(int): Returns the largest divisible between 0 -200
-    """
-    maxed = 200
-    i = 0
-    n = maxed
-    while i < maxed:
-        if number % n == 0:
-            i = maxed
-            return n
-        n -= 1
+#     Returns:
+#         int(int): Returns the largest divisible between 0 -200
+#     """
+#     maxed = 200
+#     i = 0
+#     n = maxed
+#     while i < maxed:
+#         if number % n == 0:
+#             i = maxed
+#             return n
+#         n -= 1
 
 def close_blocker(website_list):
     """ This function instantly deletes the website blocker and 
@@ -50,20 +50,21 @@ def close_blocker(website_list):
                 file.write(line)
             file.truncate()
     running = False
+    print('unblocked')
     return running
 
-def countdown_time(times, wait):
-    """ This functions holds the program until
-    it hits the correct time.
+# def countdown_time(times, wait):
+#     """ This functions holds the program until
+#     it hits the correct time.
 
-    Args:
-        times(int): Time difference between to times
-        wait(int): How long the function waits per interval
-    """
-    i = 0
-    while i < times:
-        i += wait
-        time.sleep(wait * 60)
+#     Args:
+#         times(int): Time difference between to times
+#         wait(int): How long the function waits per interval
+#     """
+#     i = 0
+#     while i < times:
+#         i += wait
+#         time.sleep(wait * 60)
 
 
 # websiteList -> list
