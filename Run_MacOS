@@ -1,0 +1,6 @@
+echo `pwd`
+echo $0
+BASEDIR=$(dirname "$0")
+echo $BASEDIR
+cd $BASEDIR
+sudo python3 main.py

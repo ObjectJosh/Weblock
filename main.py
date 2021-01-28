@@ -1,18 +1,19 @@
-from site_blocker import *
-
-# def get_ui():
-#     return ui
-
-# def init():
-#     global ui
-#     ui = Ui_MainWindow()
+import block_sites_screen as screen_file
+from PyQt5 import QtWidgets
+import sys
+import settings
+import platform
 
 if __name__ == "__main__":
-    import sys
-
+    hostPath = ""
+    if platform.system() == "Darwin":
+        hostPath = r"/private/etc/hosts"
+    elif platform.system() == "Windows":
+        hostPath = r"C:\Windows\System32\drivers\etc\hosts"
+    settings.init(hostPath)
     app = QtWidgets.QApplication(sys.argv)
     MainWindow = QtWidgets.QMainWindow()
-    ui = Ui_MainWindow()
+    ui = screen_file.Ui_MainWindow()
     ui.setupUi(MainWindow)
     ui.connectActions()
     MainWindow.show()
