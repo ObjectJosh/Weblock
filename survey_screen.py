@@ -113,7 +113,7 @@ class UIWindow(object):
         self.timer.timeout.connect(self.countdown)
         self.startTimer()
         self.seconds = 1
-        self.confirmButton.clicked.connect(self.clicked)
+        self.confirmButton.clicked.connect(self.confirm_clicked)
 
     def now_get_sites(self):
         self.time_list = screen_file.readFile("data.csv")
@@ -136,11 +136,15 @@ class UIWindow(object):
         running = False
         return running
     
-    def clicked(self):
-        sites = self.now_get_sites()
-        self.close_blocker(sites)
-        print("Overide Unblocked")
-        self.override = True
+    def confirm_clicked(self):
+        # Check that all fields have text and confirmation checkbox is checked
+        if self.q1input.toPlainText().strip() != "" and self.q2input.toPlainText().strip() != "" and self.q3input.toPlainText().strip() != "" and self.checkBox.isChecked():
+            sites = self.now_get_sites()
+            self.close_blocker(sites)
+            print("Override Complete: Sites are now unblocked")
+            self.override = True
+        else:
+            print("Override Incomplete")
     
     def countdown(self):
         websites = self.now_get_sites()
