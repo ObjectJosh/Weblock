@@ -3,6 +3,13 @@ import block_sites_screen as screen_file
 import time
 import settings
 
+def get_sites():
+    time_list = screen_file.readFile("data.csv")
+    site_lists = []
+    for i in time_list: 
+        site_lists.append(i[0])
+    return site_lists
+
 class UIWindow(object):
     def __init__(self):
         self.count = 0
@@ -11,6 +18,8 @@ class UIWindow(object):
         self.timer = QtCore.QTimer()
         self.timer.start(1000) # updates the timer display every second
         self.time_list = []
+        self.web_list = get_sites()
+        self.override = False
     
     def setupUi(self, MainWindow):
         self.MainWindow = MainWindow
@@ -104,6 +113,7 @@ class UIWindow(object):
         self.timer.timeout.connect(self.countdown)
         self.startTimer()
         self.seconds = 1
+        self.confirmButton.clicked.connect(self.clicked)
 
     def get_sites(self):
         self.time_list = screen_file.readFile("data.csv")
@@ -126,29 +136,45 @@ class UIWindow(object):
         running = False
         return running
     
+    def clicked(self):
+        self.close_blocker(self.web_list)
+        print("Overide Unblocked")
+        self.override = True
+    
     def countdown(self):
-        websites = self.get_sites()
+        #websites = self.get_sites()
         #print(websites)
         if self.start == True:
             self.seconds -= 1
+            # Check if override is clicked
+            if self.override == True:
+                self.minute = 0
+                self.hour = 0
+                self.seconds = 0
+                self.start = 0
+            # Check if timer is Done
             if self.hour == 0 and self.minute == 0 and self.seconds == 0:
                 self.minute = 0
                 self.start = False
-                self.close_blocker(websites)
+                self.close_blocker(self.web_list)
                 print('Timer done')
+            # Resets seconds after its done
             elif self.seconds == 0:
                 self.seconds = 15
                 self.minute -= 1
+            # Resets minutes after its done
             if self.minute == -1 and self.hour != 0:
                 self.minute = 59
                 self.hour -= 1
+            # Format the time
             timeformatHourMin = '{:02d}:{:02d}'.format(self.hour, self.minute)
             timeformatMinSec = '{:02d}:{:02d}'.format(self.minute, self.seconds)
+            # Format depending if hour/min or min/sec
             if self.hour != 0 and self.seconds != 0:
                 self.timeDialog.display(timeformatHourMin)
             if self.hour == 0:
                 self.timeDialog.display(timeformatMinSec)
-        
+
     def startTimer(self):
         self.start = True
         if self.count == 0:
