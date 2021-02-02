@@ -115,7 +115,7 @@ class UIWindow(object):
         self.seconds = 1
         self.confirmButton.clicked.connect(self.clicked)
 
-    def get_sites(self):
+    def now_get_sites(self):
         self.time_list = screen_file.readFile("data.csv")
         site_lists = []
         for i in self.time_list: 
@@ -137,12 +137,13 @@ class UIWindow(object):
         return running
     
     def clicked(self):
-        self.close_blocker(self.web_list)
+        sites = self.now_get_sites()
+        self.close_blocker(sites)
         print("Overide Unblocked")
         self.override = True
     
     def countdown(self):
-        #websites = self.get_sites()
+        websites = self.now_get_sites()
         #print(websites)
         if self.start == True:
             self.seconds -= 1
@@ -156,7 +157,7 @@ class UIWindow(object):
             if self.hour == 0 and self.minute == 0 and self.seconds == 0:
                 self.minute = 0
                 self.start = False
-                self.close_blocker(self.web_list)
+                self.close_blocker(websites)
                 print('Timer done')
             # Resets seconds after its done
             elif self.seconds == 0:
