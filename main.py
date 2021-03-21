@@ -12,6 +12,9 @@ if __name__ == "__main__":
         hostPath = r"/private/etc/hosts"
     elif platform.system() == "Windows":
         hostPath = r"C:\Windows\System32\drivers\etc\hosts"
+    else:
+        print("Your system is unsupported. This application supports OS and Windows.")
+        exit()
     settings.init(hostPath, block_size_tuple, survey_size_tuple)
     app = QtWidgets.QApplication(sys.argv)
     MainWindow = QtWidgets.QMainWindow()
