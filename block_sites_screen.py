@@ -51,16 +51,20 @@ class Ui_MainWindow(object):
 
     def switch_screens(self):
         """ Switches the screens from MainWindow to SurveyWindow """
-        self.mainWindow = QtWidgets.QMainWindow()
+        self.shownWindow = QtWidgets.QMainWindow()
         self.surveyWindow = UIWindow()
-        self.surveyWindow.setupUi(self.mainWindow)
-        self.surveyWindow.connectActions(self.mainWindow)
+        self.surveyWindow.setupUi(self.shownWindow)
+        self.surveyWindow.connectActions(self.shownWindow)
         self.surveyWindow.setHour(int(self.surveyWindow.duration_hour))
         self.surveyWindow.setMinute(int(self.surveyWindow.duration_minute))
-        self.mainWindow.show()
+        self.shownWindow.show()
 
     def setupUi(self, MainWindow):
-        """ Setup Elements in the MainWindow """
+        """ Setup Elements in the MainWindow
+        
+        Args:
+            MainWindow(QMainWindow): the main window
+        """
         # Window set up
         self.MainWindow = MainWindow
         MainWindow.setObjectName("MainWindow")
