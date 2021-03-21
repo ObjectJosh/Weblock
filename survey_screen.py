@@ -188,6 +188,7 @@ class UIWindow(object):
            
             # Check if timer is Done
             if self.duration_hour == 0 and self.duration_minute == 0 and self.duration_seconds == 0:
+                print('this: 3')
                 self.duration_minute = 0
                 self.start = False
                 self.close_blocker(self.web_list[1:])
@@ -195,18 +196,23 @@ class UIWindow(object):
 
             # Resets seconds after its done 
             elif self.duration_seconds == 0:
+                print('this: 1')
+                print(self.duration_hour)
+                print(self.duration_minute)
                 self.duration_seconds = 59
                 self.duration_minute -= 1
+                
             
             # Resets minutes after its done
             if self.duration_minute == -1 and self.duration_hour != 0:
+                print('this: 2')
                 self.duration_minute = 59
                 self.duration_hour -= 1
             # Format the time
             timeformatHourMin = '{:02d}:{:02d}'.format(self.duration_hour, self.duration_minute)
             timeformatMinSec = '{:02d}:{:02d}'.format(self.duration_minute, self.duration_seconds)
             # Format depending if hour/min or min/sec
-            if self.duration_hour != 0 and self.duration_minute != 0:
+            if self.duration_hour != 0:
                 self.timeDialog.display(timeformatHourMin)
             if self.duration_hour == 0:
                 self.timeDialog.display(timeformatMinSec)
