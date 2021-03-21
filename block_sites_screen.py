@@ -1,4 +1,4 @@
-# GUI for the first part of the site blocker (gets website names, time duration)
+# The initial screen for setting the sites which the user would like to block
 
 from PyQt5 import QtCore, QtGui, QtWidgets
 from survey_screen import UIWindow
@@ -12,6 +12,7 @@ def readFile(fileName):
         for line in websites_file:
             line = line.split(",")
             settings = [line[0], line[1]]
+            print(settings)
             websites.append(settings)
         websites_file.close()
     except IOError:
@@ -66,8 +67,8 @@ class Ui_MainWindow(object):
         self.ui = UIWindow()
         self.ui.setupUi(self.mainWindow)
         self.ui.connectActions(self.mainWindow)
-        # self.ui.setHour(int(self.hour))
-        # self.ui.setMinute(int(self.minute))
+        self.ui.setHour(int(self.ui.duration_hour))
+        self.ui.setMinute(int(self.ui.duration_minute))
         self.mainWindow.show()
 
     def setupUi(self, MainWindow):
@@ -109,8 +110,6 @@ class Ui_MainWindow(object):
         self.hoursField = QtWidgets.QTextEdit(self.gridLayoutWidget)
         self.hoursField.setMaximumSize(QtCore.QSize(150, 25))
         self.hoursField.setStyleSheet("background-color: #c8daf2")
-        self.hoursField.setText("hello")
-        self.hoursField.setPlainText("heloo")
         self.hoursField.setObjectName("hoursField")
         self.durationGridLayout.addWidget(self.hoursField, 1, 0, 1, 1)
         # Hours Label
@@ -144,7 +143,7 @@ class Ui_MainWindow(object):
         try:
             if len(self.website_list) > 0:
                 rows = 4
-                for websiteToggle in self.website_list:
+                for websiteToggle in self.website_list[1:]:
                     self.createSite(rows)
                     self.createCheckBoxButton(rows)
                     self.createDelButton(rows)
@@ -248,12 +247,13 @@ class Ui_MainWindow(object):
                 row = self.deleteButton.index(button)
                 self.deleteButton[row].clicked.connect(self.deleteRow)
 
+    
     # This function blocks the websites with inputed hour and min. Once the new hour and min duration is over, the funcion blocks the websites
     # hostsPath -> string
     # websiteList -> list
     # hour -> int
     # mins -> int
-    def websiteBlocker(self, hostsPath, websiteList, hour, mins):
+    def websiteBlocker(self, hostsPath, websiteList):
         """ This function blocks the websites with inputed hour
         and min. Once the new hour and min duration is over, the
         funcion blocks the websites
@@ -268,6 +268,7 @@ class Ui_MainWindow(object):
         redirect = "127.0.0.1"
 
         print('blocked')
+        print(websiteList)
         # Then redirect the blocked websites
         with open(hostsPath, 'r+') as hostsfile:
             host_content = hostsfile.read()
@@ -277,48 +278,67 @@ class Ui_MainWindow(object):
 
     
     def saveClicked(self):
+        # for i in range(len(self.sites)):
+        #     link = str(self.sites[i].toPlainText())
+        #     checked = self.checkBox[i].isChecked()
+        #     if link != "":
+        #         self.settingsList.append([link, checked])
+        if self.hoursField.toPlainText().strip() != "" and self.minutesField.toPlainText().strip():
+            #self.settingsList.append([self.hoursField.toPlainText().strip(), self.minutesField.toPlainText().strip()])
+            self.duration_hour = self.hoursField.toPlainText().strip()
+            self.duration_minute = self.minutesField.toPlainText().strip()
+        
+        elif self.hoursField.toPlainText().strip() != "" and self.minutesField.toPlainText().strip() == "":
+            #self.settingsList.append([self.hoursField.toPlainText().strip(), "00"])
+            self.minute = 0
+            self.duration_hour = self.hoursField.toPlainText().strip()
+        
+        elif self.hoursField.toPlainText().strip() == "" and self.minutesField.toPlainText().strip() != "":
+            #self.settingsList.append(["0", self.minutesField.toPlainText().strip()])
+            self.duration_hour = 0
+            self.minute = self.minutesField.toPlainText().strip()
+        
+        self.settingsList.append([self.hour, self.minute])
+
         for i in range(len(self.sites)):
             link = str(self.sites[i].toPlainText())
             checked = self.checkBox[i].isChecked()
             if link != "":
                 self.settingsList.append([link, checked])
-        if self.hoursField.toPlainText().strip() != "" and self.minutesField.toPlainText().strip():
-            #self.settingsList.append([self.hoursField.toPlainText().strip(), self.minutesField.toPlainText().strip()])
-            self.hour = self.hoursField.toPlainText().strip()
-            self.minute = self.minutesField.toPlainText().strip()
-        
-        elif self.hoursField.toPlainText().strip() != "" and self.minutesField.toPlainText().strip() == "":
-            #self.settingsList.append([self.hoursField.toPlainText().strip(), "00"])
-            self.minute = 0
-            self.hour = self.hoursField.toPlainText().strip()
-        
-        elif self.hoursField.toPlainText().strip() == "" and self.minutesField.toPlainText().strip() != "":
-            #self.settingsList.append(["0", self.minutesField.toPlainText().strip()])
-            self.hour = 0
-            self.minute = self.minutesField.toPlainText().strip()
+                # print("HERE")
+                # print((link, checked))
     
         websites = []
-        print(len(self.settingsList))
-        for i in range(len(self.settingsList)):
-            print('sett')
-            print(self.settingsList[i])
+        websites.append([self.hour, self.minute])
+        for i in range(1, len(self.settingsList)):
+            # print('sett')
+            # print(self.settingsList[i])
             sites = self.settingsList[i]
-            link = sites[0]
-            websites.append(link)
+            if sites[1]:
+                link = sites[0]
+                websites.append(link)
             writeFile(self.settingsList, "data.csv")
         
         self.ui.setHour(int(self.hour))
         self.ui.setMinute(int(self.minute))
-        self.websiteBlocker(settings.hostPath, websites, self.hour, self.minute)
+        print(websites)
+        self.websiteBlocker(settings.hostPath, websites[1:])
         
-        self.hour = self.hoursField.toPlainText().strip()
-        self.minute = self.minutesField.toPlainText().strip()
+        if self.hoursField.toPlainText().strip() == "":
+            self.ui.duration_hour = 0
+        else:
+            self.ui.duration_hour = int(self.hoursField.toPlainText().strip())
+        
+        if self.minutesField.toPlainText().strip() == "":
+            self.ui.duration_minute = 0
+        else:
+            self.ui.duration_minute = int(self.minutesField.toPlainText().strip())
     
     def getMinute(self):
-        return self.minute
+        return self.duration_minute
 
     def getHour(self):
-        return self.hour
+        return self.duration_hour
     
     def deleteRow(self, row):
         self.deleteButton[row].deleteLater()
