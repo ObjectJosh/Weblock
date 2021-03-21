@@ -1,3 +1,5 @@
+# Main file for the program
+
 import block_sites_screen as screen_file
 from PyQt5 import QtWidgets
 import sys
