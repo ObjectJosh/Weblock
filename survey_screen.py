@@ -3,12 +3,14 @@ import block_sites_screen as screen_file
 import time
 import settings
 
+"""
 def get_sites():
     time_list = screen_file.readFile("data.csv")
     site_lists = []
     for i in time_list: 
         site_lists.append(i[0])
     return site_lists
+"""
 
 class UIWindow(object):
     def __init__(self):
@@ -18,8 +20,10 @@ class UIWindow(object):
         self.timer = QtCore.QTimer()
         self.timer.start(1000) # updates the timer display every second
         self.time_list = []
-        self.web_list = get_sites()
+        self.web_list = None
         self.override = False
+        self.duration_hour = 0
+        self.duration_minute = 0
     
     def setupUi(self, MainWindow):
         self.MainWindow = MainWindow
@@ -110,16 +114,30 @@ class UIWindow(object):
         self.timeRemaining.setText(_translate("Web Blocker", "Time Remaining"))
 
     def connectActions(self, MainWindow):
-        self.timer.timeout.connect(self.countdown)
+        self.timer.timeout.connect(self.update_time)
         self.startTimer()
-        self.seconds = 1
-        self.confirmButton.clicked.connect(self.clicked)
+        self.duration_seconds = 1
+        # self.hour = int(self.web_list[0][0])
+        # self.minute = int(self.web_list[0][1])
+        self.confirmButton.clicked.connect(self.confirm_clicked)
+    
+    def update_time(self):
+        self.web_list = self.now_get_sites()
+        # print("HOUR MIN IS:")
+        # print(self.hour)
+        # print(self.minute)
+        # exit()
+        # self.duration_hour = int(self.web_list[0][0])
+        # self.duration_minute = int(self.web_list[0][1])
+        self.countdown()
 
     def now_get_sites(self):
         self.time_list = screen_file.readFile("data.csv")
         site_lists = []
-        for i in self.time_list: 
+        site_lists.append(self.time_list[0])
+        for i in self.time_list[1:]:
             site_lists.append(i[0])
+        print(site_lists)
         return site_lists
     
     def close_blocker(self, website_list):
@@ -136,44 +154,61 @@ class UIWindow(object):
         running = False
         return running
     
-    def clicked(self):
-        sites = self.now_get_sites()
-        self.close_blocker(sites)
-        print("Overide Unblocked")
-        self.override = True
+    def confirm_clicked(self):
+        # Check that all fields have text and confirmation checkbox is checked
+        if self.q1input.toPlainText().strip() != "" and self.q2input.toPlainText().strip() != "" and self.q3input.toPlainText().strip() != "" and self.checkBox.isChecked():
+            sites = self.now_get_sites()
+            self.close_blocker(self.web_list[1:])
+            print("Override Complete: Sites are now unblocked")
+            self.override = True
+        else:
+            print("Override Incomplete")
     
     def countdown(self):
-        websites = self.now_get_sites()
+        #self.web_list = self.now_get_sites()
         #print(websites)
+        # time = self.web_list[0]
+        # print('time')
+        # print(time)
+        # self.hour = int(self.web_list[0][0])
+        # self.minute = int(self.web_list[0][1])
+        print("the hour is:")
+        print(self.duration_hour)
+        print("The minute is:")
+        print(self.duration_minute)
         if self.start == True:
-            self.seconds -= 1
+            self.duration_seconds -= 1
+            
             # Check if override is clicked
             if self.override == True:
-                self.minute = 0
-                self.hour = 0
-                self.seconds = 0
+                self.duration_minute = 0
+                self.duration_hour = 0
+                self.duration_seconds = 0
                 self.start = 0
+           
             # Check if timer is Done
-            if self.hour == 0 and self.minute == 0 and self.seconds == 0:
-                self.minute = 0
+            if self.duration_hour == 0 and self.duration_minute == 0 and self.duration_seconds == 0:
+                self.duration_minute = 0
                 self.start = False
-                self.close_blocker(websites)
+                self.close_blocker(self.web_list[1:])
                 print('Timer done')
-            # Resets seconds after its done
-            elif self.seconds == 0:
-                self.seconds = 15
-                self.minute -= 1
+
+            # Resets seconds after its done 
+            elif self.duration_seconds == 0:
+                self.duration_seconds = 59
+                self.duration_minute -= 1
+            
             # Resets minutes after its done
-            if self.minute == -1 and self.hour != 0:
-                self.minute = 59
-                self.hour -= 1
+            if self.duration_minute == -1 and self.duration_hour != 0:
+                self.duration_minute = 59
+                self.duration_hour -= 1
             # Format the time
-            timeformatHourMin = '{:02d}:{:02d}'.format(self.hour, self.minute)
-            timeformatMinSec = '{:02d}:{:02d}'.format(self.minute, self.seconds)
+            timeformatHourMin = '{:02d}:{:02d}'.format(self.duration_hour, self.duration_minute)
+            timeformatMinSec = '{:02d}:{:02d}'.format(self.duration_minute, self.duration_seconds)
             # Format depending if hour/min or min/sec
-            if self.hour != 0 and self.seconds != 0:
+            if self.duration_hour != 0 and self.duration_minute != 0:
                 self.timeDialog.display(timeformatHourMin)
-            if self.hour == 0:
+            if self.duration_hour == 0:
                 self.timeDialog.display(timeformatMinSec)
 
     def startTimer(self):
@@ -181,8 +216,8 @@ class UIWindow(object):
         if self.count == 0:
             self.start == False
     
-    def setMinute(self, min):
-        self.minute = min
+    def setMinute(self, dur_min):
+        self.duration_minute = dur_min
 
-    def setHour(self, hour):
-        self.hour = hour
+    def setHour(self, dur_hour):
+        self.duration_hour = dur_hour
