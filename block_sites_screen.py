@@ -165,17 +165,12 @@ class Ui_MainWindow(object):
         try:
             if len(self.website_list) > 0:
                 for websiteToggle in self.website_list[1:]:
-                    # self.createSite(rows)
-                    # self.createCheckBoxButton(rows)
-                    # self.createDelButton(rows)
                     self.newRow()
                     self.sites[-1].setPlainText(websiteToggle[0])
                     self.checkBox[-1].setChecked(websiteToggle[1].strip() == "True")
+        # If there is no starting data, make 3 blank rows
         except AttributeError:
-            for i in range(4, 6):
-                # self.createSite(i)
-                # self.createCheckBoxButton(i)
-                # self.createDelButton(i)
+            for _ in range(3):
                 self.newRow()
         
         self.retranslateUi(MainWindow)
@@ -250,14 +245,14 @@ class Ui_MainWindow(object):
         self.connectButtons()
     
     def disconnectButtons(self):
+        """ Disonnect click events for 'Delete' buttons in the MainWindow. Acts as a reset to current connections """
         for i in range(len(self.deleteButton)):
             self.deleteButton[i].clicked.disconnect()
-        #self.deleteButton[0].clicked.disconnect()
 
     def connectButtons(self):
+        """ Connect click events for 'Delete' buttons in the MainWindow """
         for i in range(len(self.deleteButton)):
             self.deleteButton[i].clicked.connect(partial(self.deleteRow, i))
-        #self.deleteButton[0].clicked.connect(partial(self.deleteRow, 0))
     
     def websiteBlocker(self, hostsPath, websiteList):
         """ This function blocks the websites with inputed hour
@@ -267,13 +262,11 @@ class Ui_MainWindow(object):
         Args:
             hostsPath(str): Directory to the hosts file
             websiteList(list): A list of blocked website url
-            hour(int): How many hours are blocked
-            mins(int): How many minutes are blocked
         """
-        # Redirect to hosts file
+        # Redirect port
         redirect = "127.0.0.1"
 
-        # Then redirect the blocked websites
+        # Redirect the blocked websites
         try:
             with open(hostsPath, 'r+') as hostsfile:
                 host_content = hostsfile.read()
@@ -287,23 +280,24 @@ class Ui_MainWindow(object):
     def saveClicked(self):
         """ Whenever save button is clicked, it reads text from the text box
         and stores them into 'data.csv' for use in the survey window. """
+        hoursFieldText = self.hoursField.toPlainText().strip()
+        minutesFieldText = self.minutesField.toPlainText().strip()
         # If both 'Hours' text field and 'Minutes' text field are filled
-        if self.hoursField.toPlainText().strip() != "" and self.minutesField.toPlainText().strip() != "":
-            self.duration_hour = self.hoursField.toPlainText().strip()
-            self.duration_minute = self.minutesField.toPlainText().strip()
+        if hoursFieldText != "" and minutesFieldText != "":
+            self.duration_hour = hoursFieldText
+            self.duration_minute = minutesFieldText
         # If only 'Hours' text field is filled
-        elif self.hoursField.toPlainText().strip() != "" and self.minutesField.toPlainText().strip() == "":
+        elif hoursFieldText != "" and minutesFieldText == "":
             self.minute = 0
-            self.duration_hour = self.hoursField.toPlainText().strip()
+            self.duration_hour = hoursFieldText
         # If only 'Minutes' text field is filled
-        elif self.hoursField.toPlainText().strip() == "" and self.minutesField.toPlainText().strip() != "":
+        elif hoursFieldText == "" and minutesFieldText != "":
             self.duration_hour = 0
-            self.minute = self.minutesField.toPlainText().strip()
+            self.minute = minutesFieldText
         self.update_settingsList()
-        site_list = self.site_list()
         self.surveyWindow.setHour(int(self.hour))
         self.surveyWindow.setMinute(int(self.minute))
-        self.websiteBlocker(settings.hostPath, site_list)
+        self.websiteBlocker(settings.hostPath, self.site_list())
         writeFile(self.settingsList, "data.csv")
         self.set_countdown_time()
         
@@ -346,10 +340,12 @@ class Ui_MainWindow(object):
             self.surveyWindow.duration_minute = int(dur_min)
     
     def deleteRow(self, button_list_idx):
-        """ This function deletes a single row from the MainWindow """
+        """ This function deletes a single row from the MainWindow
+        
+        Args:
+            button_list_idx(int): the index of the button which was clicked in deleteButton list
+        """
         grid_index = (button_list_idx + 1) * 3
-        print("button %d was clicked"%(grid_index))
-        print(self.gridLayout.itemAt(grid_index).widget().objectName())
         self.gridLayout.itemAt(grid_index).widget().deleteLater()
         self.gridLayout.itemAt((grid_index) + 1).widget().deleteLater()
         self.gridLayout.itemAt((grid_index) + 2).widget().deleteLater()
@@ -363,53 +359,41 @@ class Ui_MainWindow(object):
     def newRow(self):
         """ This function adds a single new row to the MainWindow """
         # Create Site
-        self.createSite(self.row)
+        self.createSite()
         # Create CheckBox
-        self.createCheckBoxButton(self.row)
+        self.createCheckBoxButton()
         # Create Delete Button
-        self.createDelButton(self.row)
+        self.createDelButton()
 
         self.row += 1
         self.connectButtons()
 
-    def createSite(self, row):
-        """ This function creates a new-site(text-box) to MainWindow
-        
-        Args:
-            row(int): the index of the next row to be added
-        """
+    def createSite(self):
+        """ This function creates a new-site(text-box) to MainWindow """
         self.sites.append(QtWidgets.QTextEdit(self.scrollAreaWidgetContents))
         self.sites[-1].setMinimumSize(QtCore.QSize(351, 31))
         self.sites[-1].setMaximumSize(QtCore.QSize(351, 31))
         self.sites[-1].setStyleSheet("background-color: #c8daf2")
         self.sites[-1].setObjectName("site" + str(len(self.sites)))
-        self.gridLayout.addWidget(self.sites[-1], row, 0, 1, 1)
+        self.gridLayout.addWidget(self.sites[-1], self.row, 0, 1, 1)
 
-    def createCheckBoxButton(self, row):
-        """ This function creates a new CheckBox to the MainWindow 
-        
-        Args:
-            row(int): the index of the next row to be added
-        """
+    def createCheckBoxButton(self):
+        """ This function creates a new CheckBox to the MainWindow """
         self.checkBox.append(QtWidgets.QCheckBox(self.scrollAreaWidgetContents))
         self.checkBox[-1].setText("")
         self.checkBox[-1].setStyleSheet("background-color: #173364")
         self.checkBox[-1].setObjectName("checkBox1")
-        self.gridLayout.addWidget(self.checkBox[-1], row, 1, 1, 1, QtCore.Qt.AlignHCenter)
+        self.gridLayout.addWidget(self.checkBox[-1], self.row, 1, 1, 1, QtCore.Qt.AlignHCenter)
         self.checkBox[-1].setChecked(True)
 
-    def createDelButton(self, row):
-        """ This function creates a new Delete-Button to the MainWindow
-        
-        Args:
-            row(int): the index of the next row to be added
-        """
+    def createDelButton(self):
+        """ This function creates a new Delete-Button to the MainWindow """
         _translate = QtCore.QCoreApplication.translate
         self.deleteButton.append(QtWidgets.QPushButton(self.scrollAreaWidgetContents))
         self.deleteButton[-1].setStyleSheet("background-color: #173364; color: #c8daf2")
         self.deleteButton[-1].setObjectName("deleteButton" + str(len(self.deleteButton)))
         self.deleteButton[-1].setText(_translate("MainWindow", "Delete"))
-        self.gridLayout.addWidget(self.deleteButton[-1], row, 2, 1, 1)
+        self.gridLayout.addWidget(self.deleteButton[-1], self.row, 2, 1, 1)
     
 def readFile(fileName):
     """ This function reads the contents of the data.csv file
@@ -427,6 +411,7 @@ def readFile(fileName):
             settings = [line[0], line[1]]
             websites.append(settings)
         websites_file.close()
+    # If the file is not found, that means there is no saved data yet
     except FileNotFoundError:
         pass
     return websites
@@ -435,6 +420,7 @@ def writeFile(settings, fileName):
     """ This function writes the contents into the data.csv file 
     
     Arguments:
+        settings(list): list of each site's data and settings
         fileName(string): the name of the data file
     """
     output = open(fileName, "w")
