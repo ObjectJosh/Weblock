@@ -4,30 +4,24 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 from survey_screen import UIWindow
 import sys
 import settings
+from functools import partial
 
 class Ui_MainWindow(object):
     """ The Block Site window """
     def __init__(self):
         """ Initializes the Ui_MainWindow """
         self.MainWindow = None
-
         # Starting row
-        self.row = 6
+        self.row = 1
 
         # Site
-        self.siteNum = 1
         self.sites = []
-        self.siteIndex = 0
 
         # Delete Button
-        self.dbNum = 1
         self.deleteButton = []
-        self.dbIndex = 0
         
         # Checkbox
-        self.cbNum = 1
         self.checkBox = []
-        self.cbIndex = 0
         
         # Time
         self.hour = 0
@@ -145,42 +139,44 @@ class Ui_MainWindow(object):
         self.gridLayout = QtWidgets.QGridLayout(self.scrollAreaWidgetContents)
         self.gridLayout.setObjectName("gridLayout")
 
-        # Creates a check and delete button for every row
-        try:
-            if len(self.website_list) > 0:
-                rows = 4
-                for websiteToggle in self.website_list[1:]:
-                    self.createSite(rows)
-                    self.createCheckBoxButton(rows)
-                    self.createDelButton(rows)
-                    self.sites[self.siteIndex - 1].setPlainText(websiteToggle[0])
-                    self.checkBox[self.cbIndex - 1].setChecked(websiteToggle[1].strip() == "True")
-                    rows += 1
-        except AttributeError:
-            for i in range(4, 6):
-                self.createSite(i)
-                self.createCheckBoxButton(i)
-                self.createDelButton(i)
+        # Block Sites -> Label
+        self.blockedSitesLabel = QtWidgets.QLabel(self.scrollAreaWidgetContents)
+        self.blockedSitesLabel.setStyleSheet("color:     #95bfe7")
+        self.blockedSitesLabel.setObjectName("blockedSitesLabel")
+        self.gridLayout.addWidget(self.blockedSitesLabel, self.row, 0, 1, 1) 
+
+        self.scrollArea.setWidget(self.scrollAreaWidgetContents)
+        MainWindow.setCentralWidget(self.centralwidget)
 
         # Blocked -> Label
         self.blockedLabel = QtWidgets.QLabel(self.scrollAreaWidgetContents)
         self.blockedLabel.setStyleSheet("color:     #95bfe7")
         self.blockedLabel.setObjectName("blockedLabel")
-        self.gridLayout.addWidget(self.blockedLabel, 2, 1, 1, 1)
+        self.gridLayout.addWidget(self.blockedLabel, self.row, 1, 1, 1)
 
         # Add New -> Button
         self.addNewButton = QtWidgets.QPushButton(self.scrollAreaWidgetContents)
         self.addNewButton.setStyleSheet("color:     #95bfe7")
         self.addNewButton.setObjectName("addNewButton")
-        self.gridLayout.addWidget(self.addNewButton, 2, 2, 1, 1)
-        
-        # Block Sites -> Label
-        self.blockedSitesLabel = QtWidgets.QLabel(self.scrollAreaWidgetContents)
-        self.blockedSitesLabel.setStyleSheet("color:     #95bfe7")
-        self.blockedSitesLabel.setObjectName("blockedSitesLabel")
-        self.gridLayout.addWidget(self.blockedSitesLabel, 2, 0, 1, 1)
-        self.scrollArea.setWidget(self.scrollAreaWidgetContents)
-        MainWindow.setCentralWidget(self.centralwidget)
+        self.gridLayout.addWidget(self.addNewButton, self.row, 2, 1, 1)
+        self.row += 1
+
+        # Creates a check and delete button for every row
+        try:
+            if len(self.website_list) > 0:
+                for websiteToggle in self.website_list[1:]:
+                    # self.createSite(rows)
+                    # self.createCheckBoxButton(rows)
+                    # self.createDelButton(rows)
+                    self.newRow()
+                    self.sites[-1].setPlainText(websiteToggle[0])
+                    self.checkBox[-1].setChecked(websiteToggle[1].strip() == "True")
+        except AttributeError:
+            for i in range(4, 6):
+                # self.createSite(i)
+                # self.createCheckBoxButton(i)
+                # self.createDelButton(i)
+                self.newRow()
         
         self.retranslateUi(MainWindow)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
@@ -251,11 +247,18 @@ class Ui_MainWindow(object):
         self.addNewButton.clicked.connect(self.newRow)
 
         # Delete Row is Clicked
-        for button in self.deleteButton:
-            if button.clicked:
-                row = self.deleteButton.index(button)
-                self.deleteButton[row].clicked.connect(self.deleteRow)
+        self.connectButtons()
+    
+    def disconnectButtons(self):
+        for i in range(len(self.deleteButton)):
+            self.deleteButton[i].clicked.disconnect()
+        #self.deleteButton[0].clicked.disconnect()
 
+    def connectButtons(self):
+        for i in range(len(self.deleteButton)):
+            self.deleteButton[i].clicked.connect(partial(self.deleteRow, i))
+        #self.deleteButton[0].clicked.connect(partial(self.deleteRow, 0))
+    
     def websiteBlocker(self, hostsPath, websiteList):
         """ This function blocks the websites with inputed hour
         and min. Once the new hour and min duration is over, the
@@ -342,22 +345,32 @@ class Ui_MainWindow(object):
         else:
             self.surveyWindow.duration_minute = int(dur_min)
     
-    def deleteRow(self):
+    def deleteRow(self, button_list_idx):
         """ This function deletes a single row from the MainWindow """
-        self.deleteButton.pop(0)
-        self.gridLayout.itemAt(0).widget().deleteLater()
-        self.gridLayout.itemAt(1).widget().deleteLater()
-        self.gridLayout.itemAt(2).widget().deleteLater()
+        grid_index = (button_list_idx + 1) * 3
+        print("button %d was clicked"%(grid_index))
+        print(self.gridLayout.itemAt(grid_index).widget().objectName())
+        self.gridLayout.itemAt(grid_index).widget().deleteLater()
+        self.gridLayout.itemAt((grid_index) + 1).widget().deleteLater()
+        self.gridLayout.itemAt((grid_index) + 2).widget().deleteLater()
+        self.disconnectButtons()
+        self.deleteButton.pop(button_list_idx)
+        self.sites.pop(button_list_idx)
+        self.checkBox.pop(button_list_idx)
+        self.connectButtons()
+        #self.row -= 1
 
     def newRow(self):
         """ This function adds a single new row to the MainWindow """
-        # Create Delete Button
-        self.createDelButton(self.row)
-        # Create CheckBox
-        self.createCheckBoxButton(self.row)
         # Create Site
         self.createSite(self.row)
+        # Create CheckBox
+        self.createCheckBoxButton(self.row)
+        # Create Delete Button
+        self.createDelButton(self.row)
+
         self.row += 1
+        self.connectButtons()
 
     def createSite(self, row):
         """ This function creates a new-site(text-box) to MainWindow
@@ -366,14 +379,11 @@ class Ui_MainWindow(object):
             row(int): the index of the next row to be added
         """
         self.sites.append(QtWidgets.QTextEdit(self.scrollAreaWidgetContents))
-        self.sites[self.siteIndex].setMinimumSize(QtCore.QSize(351, 31))
-        self.sites[self.siteIndex].setMaximumSize(QtCore.QSize(351, 31))
-        self.sites[self.siteIndex].setStyleSheet("background-color: #c8daf2")
-        self.sites[self.siteIndex].setObjectName("site" + str(self.siteNum))
-        self.gridLayout.addWidget(self.sites[self.siteIndex], row, 0, 1, 1)
-        self.siteNum += 1
-        self.siteIndex += 1
-        self.row += 1
+        self.sites[-1].setMinimumSize(QtCore.QSize(351, 31))
+        self.sites[-1].setMaximumSize(QtCore.QSize(351, 31))
+        self.sites[-1].setStyleSheet("background-color: #c8daf2")
+        self.sites[-1].setObjectName("site" + str(len(self.sites)))
+        self.gridLayout.addWidget(self.sites[-1], row, 0, 1, 1)
 
     def createCheckBoxButton(self, row):
         """ This function creates a new CheckBox to the MainWindow 
@@ -382,13 +392,11 @@ class Ui_MainWindow(object):
             row(int): the index of the next row to be added
         """
         self.checkBox.append(QtWidgets.QCheckBox(self.scrollAreaWidgetContents))
-        self.checkBox[self.cbIndex].setText("")
-        self.checkBox[self.cbIndex].setStyleSheet("background-color: #173364")
-        self.checkBox[self.cbIndex].setObjectName("checkBox1")
-        self.gridLayout.addWidget(self.checkBox[self.cbIndex], row, 1, 1, 1, QtCore.Qt.AlignHCenter)
-        self.checkBox[self.cbIndex].setChecked(True)
-        self.cbIndex += 1
-        self.cbNum += 1
+        self.checkBox[-1].setText("")
+        self.checkBox[-1].setStyleSheet("background-color: #173364")
+        self.checkBox[-1].setObjectName("checkBox1")
+        self.gridLayout.addWidget(self.checkBox[-1], row, 1, 1, 1, QtCore.Qt.AlignHCenter)
+        self.checkBox[-1].setChecked(True)
 
     def createDelButton(self, row):
         """ This function creates a new Delete-Button to the MainWindow
@@ -398,12 +406,10 @@ class Ui_MainWindow(object):
         """
         _translate = QtCore.QCoreApplication.translate
         self.deleteButton.append(QtWidgets.QPushButton(self.scrollAreaWidgetContents))
-        self.deleteButton[self.dbIndex].setStyleSheet("background-color: #173364; color: #c8daf2")
-        self.deleteButton[self.dbIndex].setObjectName("deleteButton" + str(self.dbNum))
-        self.deleteButton[self.dbIndex].setText(_translate("MainWindow", "Delete"))
-        self.gridLayout.addWidget(self.deleteButton[self.dbIndex], row, 2, 1, 1)
-        self.dbIndex += 1
-        self.dbNum += 1
+        self.deleteButton[-1].setStyleSheet("background-color: #173364; color: #c8daf2")
+        self.deleteButton[-1].setObjectName("deleteButton" + str(len(self.deleteButton)))
+        self.deleteButton[-1].setText(_translate("MainWindow", "Delete"))
+        self.gridLayout.addWidget(self.deleteButton[-1], row, 2, 1, 1)
     
 def readFile(fileName):
     """ This function reads the contents of the data.csv file
