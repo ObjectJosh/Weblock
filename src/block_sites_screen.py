@@ -8,9 +8,11 @@ from functools import partial
 
 class Ui_MainWindow(object):
     """ The Block Site window """
+
     def __init__(self):
         """ Initializes the Ui_MainWindow """
         self.MainWindow = None
+        self.surveyWindow = UIWindow()
         # Starting row
         self.row = 1
 
@@ -19,17 +21,17 @@ class Ui_MainWindow(object):
 
         # Delete Button
         self.deleteButton = []
-        
+
         # Checkbox
         self.checkBox = []
-        
+
         # Time
         self.hour = 0
         self.minute = 0
-        
+
         # Website List
         self.website_list = []
-        
+
         # List From Data
         temp_list = readFile("data.csv")
         try:
@@ -39,10 +41,10 @@ class Ui_MainWindow(object):
             self.website_list = []
         except ValueError:
             self.website_list = temp_list
-        
+
         # Settings List
         self.settingsList = []
-    
+
     def closeEvent(self, event):
         close = QtWidgets.QMessageBox()
         close.setText("You sure?")
@@ -56,8 +58,6 @@ class Ui_MainWindow(object):
 
     def switch_screens(self):
         """ Switches the screens from MainWindow to SurveyWindow """
-        
-        self.surveyWindow = UIWindow()
         self.shownWindow = MySurveyWindow()
         self.shownWindow.passWindowObject(self.surveyWindow)
         self.surveyWindow.setupUi(self.shownWindow)
@@ -68,76 +68,76 @@ class Ui_MainWindow(object):
 
     def setupUi(self, MainWindow):
         """ Setup Elements in the MainWindow
-        
+
         Args:
             MainWindow(QMainWindow): the main window
         """
         # Window set up
         self.MainWindow = MainWindow
-        MainWindow.setObjectName("MainWindow")
-        MainWindow.resize(settings.block_window_size[0], settings.block_window_size[1])
+        self.MainWindow.setObjectName("MainWindow")
+        self.MainWindow.resize(settings.block_window_size[0], settings.block_window_size[1])
         window_width = int(self.MainWindow.frameGeometry().width())
         window_height = int(self.MainWindow.frameGeometry().height())
-        MainWindow.setStyleSheet("background-color: #1961b2\n")
+        self.MainWindow.setStyleSheet("background-color: #1961b2\n")
 
         # Central Widget -> Widget
-        self.centralwidget = QtWidgets.QWidget(MainWindow)
+        self.centralwidget = QtWidgets.QWidget(self.MainWindow)
         self.centralwidget.setObjectName("centralwidget")
-        
+
         # Set Duration Label (change this to move "Set Duration" label) -> Widget
         self.setDurationLabel = QtWidgets.QLabel(self.centralwidget)
         self.setDurationLabel.setGeometry(QtCore.QRect((window_width / 2) - 70, (window_height / 2) + 50, 140, 30))
         self.setDurationLabel.setStyleSheet("color: #95bfe7")
         self.setDurationLabel.setObjectName("setDurationLabel")
-        
+
         # Grid Layout for Sites (change this to move hour/minute text fields) -> Widget
         self.gridLayoutWidget = QtWidgets.QWidget(self.centralwidget)
         self.gridLayoutWidget.setGeometry(QtCore.QRect((window_width / 2) - 133, (window_height / 2) + 50, 266, 64))
         self.gridLayoutWidget.setObjectName("gridLayoutWidget")
-        
+
         # Grid Layout for Duration -> GridLayout
         self.durationGridLayout = QtWidgets.QGridLayout(self.gridLayoutWidget)
         self.durationGridLayout.setContentsMargins(0, 0, 0, 0)
         self.durationGridLayout.setObjectName("durationGridLayout")
-        
+
         # Minutes Text Field -> TextEdit
         self.minutesField = QtWidgets.QTextEdit(self.gridLayoutWidget)
         self.minutesField.setMaximumSize(QtCore.QSize(150, 30))
         self.minutesField.setStyleSheet("background-color: #c8daf2")
         self.minutesField.setObjectName("minutesField")
         self.durationGridLayout.addWidget(self.minutesField, 1, 1, 1, 1)
-        
+
         # Minutes Label -> Label
         self.minutesLabel = QtWidgets.QLabel(self.gridLayoutWidget)
         self.minutesLabel.setStyleSheet("color: #95bfe7")
         self.minutesLabel.setObjectName("minutesLabel")
         self.durationGridLayout.addWidget(self.minutesLabel, 0, 1, 1, 1, QtCore.Qt.AlignHCenter)
-        
+
         # Hours Text Field -> TextEdit
         self.hoursField = QtWidgets.QTextEdit(self.gridLayoutWidget)
         self.hoursField.setMaximumSize(QtCore.QSize(150, 25))
         self.hoursField.setStyleSheet("background-color: #c8daf2")
         self.hoursField.setObjectName("hoursField")
         self.durationGridLayout.addWidget(self.hoursField, 1, 0, 1, 1)
-        
+
         # Hours Label -> Label
         self.hoursLabel = QtWidgets.QLabel(self.gridLayoutWidget)
         self.hoursLabel.setStyleSheet("color:     #95bfe7")
         self.hoursLabel.setObjectName("hoursLabel")
         self.durationGridLayout.addWidget(self.hoursLabel, 0, 0, 1, 1, QtCore.Qt.AlignHCenter)
-        
+
         # Title Label: "Web Blocker" -> Label
         self.titleLabel = QtWidgets.QLabel(self.centralwidget)
         self.titleLabel.setGeometry(QtCore.QRect((window_width / 2) - 120, (window_height / 2) - 270, 240, 50))
         self.titleLabel.setStyleSheet("color:     #95bfe7")
         self.titleLabel.setObjectName("titleLabel")
-        
+
         # Save Button (change this to move the Save button) -> Button
         self.saveButton = QtWidgets.QPushButton(self.centralwidget)
         self.saveButton.setGeometry(QtCore.QRect((window_width / 2) - 55, (window_height / 2) + 140, 110, 31))
         self.saveButton.setStyleSheet("background-color: #173364; color:     #c8daf2")
         self.saveButton.setObjectName("saveButton")
-        
+
         # Scroll Area for Sites (change this to move sites box) -> ScrollArea
         self.scrollArea = QtWidgets.QScrollArea(self.centralwidget)
         self.scrollArea.setGeometry(QtCore.QRect((window_width / 2) - 288, (window_height / 2) - 200, 576, 200))  # size for scroll area
@@ -147,7 +147,7 @@ class Ui_MainWindow(object):
         self.scrollAreaWidgetContents = QtWidgets.QWidget()
         self.scrollAreaWidgetContents.setGeometry(QtCore.QRect(0, 0, 559, 136))
         self.scrollAreaWidgetContents.setObjectName("scrollAreaWidgetContents")
-        
+
         # Grid Layout -> GridLayout
         self.gridLayout = QtWidgets.QGridLayout(self.scrollAreaWidgetContents)
         self.gridLayout.setObjectName("gridLayout")
@@ -158,8 +158,9 @@ class Ui_MainWindow(object):
         self.blockedSitesLabel.setObjectName("blockedSitesLabel")
         self.gridLayout.addWidget(self.blockedSitesLabel, self.row, 0, 1, 1) 
 
+        # scrollArea -> ScrollArea
         self.scrollArea.setWidget(self.scrollAreaWidgetContents)
-        MainWindow.setCentralWidget(self.centralwidget)
+        self.MainWindow.setCentralWidget(self.centralwidget)
 
         # Blocked -> Label
         self.blockedLabel = QtWidgets.QLabel(self.scrollAreaWidgetContents)
@@ -185,20 +186,18 @@ class Ui_MainWindow(object):
         except AttributeError:
             for _ in range(3):
                 self.newRow()
-        
+
         self.retranslateUi(MainWindow)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
-        self.saveButton.clicked.connect(self.switch_screens)
-        self.saveButton.clicked.connect(MainWindow.hide)
-    
+
     def retranslateUi(self, MainWindow):
         """ Formats elements in the MainWindow
-        
+
         Args:
             MainWindow(QMainWindow): the main window
         """
         _translate = QtCore.QCoreApplication.translate
-        MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
+        self.MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
         self.setDurationLabel.setText(_translate("MainWindow",
                                                  "<html><head/><body><p align=\"center\"><span style=\" "
                                                  "font-size:24pt;\">Set Duration</span></p></body></html>"))
@@ -250,13 +249,14 @@ class Ui_MainWindow(object):
         """ Connect click events in the MainWindow """
         # Save Button is Clicked
         self.saveButton.clicked.connect(self.saveClicked)
+        #self.saveButton.clicked.connect(self.MainWindow.hide)
 
         # Add New Row is Clicked
         self.addNewButton.clicked.connect(self.newRow)
 
         # Delete Row is Clicked
         self.connectButtons()
-    
+
     def disconnectButtons(self):
         """ Disonnect click events for 'Delete' buttons in the MainWindow. Acts as a reset to current connections """
         for i in range(len(self.deleteButton)):
@@ -266,7 +266,7 @@ class Ui_MainWindow(object):
         """ Connect click events for 'Delete' buttons in the MainWindow """
         for i in range(len(self.deleteButton)):
             self.deleteButton[i].clicked.connect(partial(self.deleteRow, i))
-    
+
     def websiteBlocker(self, hostsPath, websiteList):
         """ This function blocks the websites with inputed hour
         and min. Once the new hour and min duration is over, the
@@ -289,31 +289,44 @@ class Ui_MainWindow(object):
             print("Successfully Blocked")
         except FileNotFoundError:
             print("Error: hosts file not found")
-    
+
     def saveClicked(self):
-        """ Whenever save button is clicked, it reads text from the text box
-        and stores them into 'data.csv' for use in the survey window. """
+        """ Whenever save button is clicked, it reads text from the text box and stores them
+        into 'data.csv' for use in the survey window. Then checks if it should switch screens. """
         hoursFieldText = self.hoursField.toPlainText().strip()
         minutesFieldText = self.minutesField.toPlainText().strip()
         # If both 'Hours' text field and 'Minutes' text field are filled
         if hoursFieldText != "" and minutesFieldText != "":
-            self.duration_hour = hoursFieldText
-            self.duration_minute = minutesFieldText
+            self.hour = hoursFieldText
+            self.minute = minutesFieldText
         # If only 'Hours' text field is filled
         elif hoursFieldText != "" and minutesFieldText == "":
             self.minute = 0
-            self.duration_hour = hoursFieldText
+            self.hour = hoursFieldText
         # If only 'Minutes' text field is filled
         elif hoursFieldText == "" and minutesFieldText != "":
-            self.duration_hour = 0
+            self.hour = 0
             self.minute = minutesFieldText
+
+        # Update current websites & settings list
         self.update_settingsList()
+
+        # Update survey window's countdown time
         self.surveyWindow.setHour(int(self.hour))
         self.surveyWindow.setMinute(int(self.minute))
-        self.websiteBlocker(settings.hostPath, self.site_list())
+
+        # Write data into file
         writeFile(self.settingsList, "data.csv")
-        self.set_countdown_time()
-        
+
+        # If timer is filled
+        if self.hour != 0 or self.minute != 0:
+            # Start blocking
+            self.websiteBlocker(settings.hostPath, self.site_list())
+            # Switch screens
+            self.MainWindow.hide()
+            self.switch_screens()
+        self.settingsList = []
+
     def update_settingsList(self):
         """ Updates the settingList, with time and non-empty sites """
         self.settingsList.append([self.hour, self.minute])
@@ -323,10 +336,10 @@ class Ui_MainWindow(object):
             checked = self.checkBox[i].isChecked()
             if link != "":
                 self.settingsList.append([link, checked])
-    
+
     def site_list(self):
         """ Creates a list of websites as strings, which will be blocked
-        
+
         Returns:
             websites(list): list of websites as strings, to be blocked
         """
@@ -337,24 +350,10 @@ class Ui_MainWindow(object):
                 link = sites[0]
                 websites.append(link)
         return websites
-        
-    def set_countdown_time(self):
-        """ This Function stores the time for the survey-screen also accounts for empty hour/minute  """
-        dur_hour = self.hoursField.toPlainText().strip()
-        dur_min = self.minutesField.toPlainText().strip()
-        if dur_hour == "":
-            self.surveyWindow.duration_hour = 0
-        else:
-            self.surveyWindow.duration_hour = int(dur_hour)
-        
-        if dur_min == "":
-            self.surveyWindow.duration_minute = 0
-        else:
-            self.surveyWindow.duration_minute = int(dur_min)
-    
+
     def deleteRow(self, button_list_idx):
         """ This function deletes a single row from the MainWindow
-        
+
         Args:
             button_list_idx(int): the index of the button which was clicked in deleteButton list
         """
@@ -409,9 +408,10 @@ class Ui_MainWindow(object):
 
 class MyWindow(QtWidgets.QMainWindow):
     """ MyWindow implements QMainWindow, used for the close window listener """
+
     def closeEvent(self, event):
         """ Listens for close window event and sends confirmation message box
-        
+
         Args:
             event(event): the event call
         """
@@ -419,10 +419,10 @@ class MyWindow(QtWidgets.QMainWindow):
         event.ignore()
         if result == QtWidgets.QMessageBox.Yes:
             event.accept()
-    
+
 def readFile(fileName):
     """ This function reads the contents of the data.csv file
-    
+
     Arguments:
         fileName(string): the name of the data file
     Returns:
@@ -443,7 +443,7 @@ def readFile(fileName):
 
 def writeFile(settings, fileName):
     """ This function writes the contents into the data.csv file 
-    
+
     Arguments:
         settings(list): list of each site's data and settings
         fileName(string): the name of the data file
@@ -452,6 +452,7 @@ def writeFile(settings, fileName):
     for setting in settings:
         output.write(str(setting[0]) + "," + str(setting[1]) + "\n")
     output.close()
+    print("Successfully Saved")
 
 if __name__ == "__main__":
     app = QtWidgets.QApplication(sys.argv)
