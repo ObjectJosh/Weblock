@@ -19,7 +19,7 @@ if __name__ == "__main__":
         exit()
     settings.init(hostPath, block_size_tuple, survey_size_tuple)
     app = QtWidgets.QApplication(sys.argv)
-    MainWindow = QtWidgets.QMainWindow()
+    MainWindow = screen_file.MyWindow()
     ui = screen_file.Ui_MainWindow()
     ui.setupUi(MainWindow)
     ui.connectActions()
