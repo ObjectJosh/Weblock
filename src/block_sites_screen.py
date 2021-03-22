@@ -1,7 +1,7 @@
 # The initial screen for setting the sites which the user would like to block
 
 from PyQt5 import QtCore, QtGui, QtWidgets
-from survey_screen import UIWindow
+from survey_screen import UIWindow, MySurveyWindow
 import sys
 import settings
 from functools import partial
@@ -42,11 +42,24 @@ class Ui_MainWindow(object):
         
         # Settings List
         self.settingsList = []
+    
+    def closeEvent(self, event):
+        close = QtWidgets.QMessageBox()
+        close.setText("You sure?")
+        close.setStandardButtons(QtWidgets.QMessageBox.Yes | QtWidgets.QMessageBox.Cancel)
+        close = close.exec()
+
+        if close == QtWidgets.QMessageBox.Yes:
+            event.accept()
+        else:
+            event.ignore()
 
     def switch_screens(self):
         """ Switches the screens from MainWindow to SurveyWindow """
-        self.shownWindow = QtWidgets.QMainWindow()
+        
         self.surveyWindow = UIWindow()
+        self.shownWindow = MySurveyWindow()
+        self.shownWindow.passWindowObject(self.surveyWindow)
         self.surveyWindow.setupUi(self.shownWindow)
         self.surveyWindow.connectActions(self.shownWindow)
         self.surveyWindow.setHour(int(self.surveyWindow.duration_hour))
@@ -354,7 +367,6 @@ class Ui_MainWindow(object):
         self.sites.pop(button_list_idx)
         self.checkBox.pop(button_list_idx)
         self.connectButtons()
-        #self.row -= 1
 
     def newRow(self):
         """ This function adds a single new row to the MainWindow """
@@ -394,6 +406,19 @@ class Ui_MainWindow(object):
         self.deleteButton[-1].setObjectName("deleteButton" + str(len(self.deleteButton)))
         self.deleteButton[-1].setText(_translate("MainWindow", "Delete"))
         self.gridLayout.addWidget(self.deleteButton[-1], self.row, 2, 1, 1)
+
+class MyWindow(QtWidgets.QMainWindow):
+    """ MyWindow implements QMainWindow, used for the close window listener """
+    def closeEvent(self, event):
+        """ Listens for close window event and sends confirmation message box
+        
+        Args:
+            event(event): the event call
+        """
+        result = QtWidgets.QMessageBox.question(self, "Confirm Exit...", "Are you sure you want to exit?", QtWidgets.QMessageBox.Yes|QtWidgets.QMessageBox.No)
+        event.ignore()
+        if result == QtWidgets.QMessageBox.Yes:
+            event.accept()
     
 def readFile(fileName):
     """ This function reads the contents of the data.csv file
@@ -430,7 +455,7 @@ def writeFile(settings, fileName):
 
 if __name__ == "__main__":
     app = QtWidgets.QApplication(sys.argv)
-    MainWindow = QtWidgets.QMainWindow()
+    MainWindow = MyWindow()
     surveyWindow = Ui_MainWindow()
     surveyWindow.setupUi(MainWindow)
     surveyWindow.connectActions()

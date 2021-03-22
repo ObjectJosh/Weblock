@@ -158,18 +158,14 @@ class UIWindow(object):
             site_lists.append(i[0])
         return site_lists
     
-    def close_blocker(self, website_list):
-        """ This function clears the websites written in the 'hosts' file
-
-        Args:
-            website_list(list): list of blocked websites as strings
-        """
+    def close_blocker(self):
+        """ This function clears the websites written in the 'hosts' file """
         try:
             with open(settings.hostPath, 'r+') as hostsfile:
                 content = hostsfile.readlines()
                 hostsfile.seek(1)
                 for line in content:
-                    if not any(site in line for site in website_list):
+                    if not any(site in line for site in self.web_list[1:]):
                         hostsfile.write(line)
                     hostsfile.truncate()
         except FileNotFoundError:
@@ -187,19 +183,27 @@ class UIWindow(object):
             self.q2input.setStyleSheet("background-color: #c8daf2")
             self.q3input.setStyleSheet("background-color: #c8daf2")
             self.checkBox.setStyleSheet("color: #95bfe7")
-            self.close_blocker(self.web_list[1:])
+            self.close_blocker()
             self.override = True
             print("Override Complete: Sites are now unblocked")
         # Fields are still blank
         else:
             if q1Text == "":
                 self.q1input.setStyleSheet("background-color: #ffb3b3")
+            else:
+                self.q1input.setStyleSheet("background-color: #c8daf2")
             if q2Text == "":
                 self.q2input.setStyleSheet("background-color: #ffb3b3")
+            else:
+                self.q2input.setStyleSheet("background-color: #c8daf2")
             if q3Text == "":
                 self.q3input.setStyleSheet("background-color: #ffb3b3")
+            else:
+                self.q3input.setStyleSheet("background-color: #c8daf2")
             if not checkBoxChecked:
                 self.checkBox.setStyleSheet("color: #ffb3b3")
+            else:
+                self.checkBox.setStyleSheet("color: #95bfe7")
             print("Override Incomplete")
     
     def countdown(self):
@@ -219,7 +223,7 @@ class UIWindow(object):
             if self.duration_hour == 0 and self.duration_minute == 0 and self.duration_seconds == 0:
                 self.duration_minute = 0
                 self.start = False
-                self.close_blocker(self.web_list[1:])
+                self.close_blocker()
                 print("Timer done")
 
             # Resets seconds after its done 
@@ -263,3 +267,26 @@ class UIWindow(object):
             dur_hour(int): the number of hours being blocked
         """
         self.duration_hour = dur_hour
+
+class MySurveyWindow(QtWidgets.QMainWindow):
+    """ MySurveyWindow implements QMainWindow, used for the close window listener """
+    
+    def closeEvent(self, event):
+        """ Listens for close window event and prompting confirmation message box
+        
+        Args:
+            event(event): the event call
+        """
+        result = QtWidgets.QMessageBox.question(self, "Confirm Exit...", "Are you sure you want to exit?", QtWidgets.QMessageBox.Yes|QtWidgets.QMessageBox.No)
+        event.ignore()
+        if result == QtWidgets.QMessageBox.Yes:
+            self.window_object.close_blocker()
+            event.accept()
+    
+    def passWindowObject(self, window_object):
+        """ Receives a UIWindow object and initializes it as its own variable
+        
+        Args:
+            window_object(UIWindow): UIWindow object being saved
+        """
+        self.window_object = window_object
