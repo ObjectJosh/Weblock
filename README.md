@@ -20,7 +20,7 @@ A program which temporarily blocks websites, designed for students to improve pr
 Prerequisites
 -----
 * Python installed
-* PyQt5 installed
+* PySide6 and PyQt5 installed
 
 PyQt5 Installation
 ----
