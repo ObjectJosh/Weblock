@@ -23,7 +23,7 @@ Prerequisites
 * PyQt5 installed
 
 PyQt5 Installation
------
+----
 1) `pip install PySide6`
 2) `pip install pyqt5`
 3) `pip install pyqt5-tools`
